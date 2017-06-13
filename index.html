@@ -6,7 +6,6 @@
         <meta name="description" content="Free web app to draw on your images. Works on mobile. No watermark."/>
         <link rel="manifest" href="./manifest.json">
         <link rel="stylesheet" href="./styles.css">
-        
     </head>
     <body>
         <div id="inputForAFile">
@@ -22,14 +21,13 @@
         <div id="drawAndDownload">
             <canvas id="drawzone"></canvas>
             <div class="topbar">
-            <input type="color" id="colorpicker"/>
-            <div style="flex-grow:1"></div>
-            <span id="pensizePreview">&#x25cf;</span>
-            <input type="range" id="pensize" min="2" max="40"/>
-            <div style="flex-grow:1"></div>
-            <a id="download">Download</a>
+                <input type="color" id="colorpicker"/>
+                <div style="flex-grow:1"></div>
+                <span id="pensizePreview">&#x25cf;</span>
+                <input type="range" id="pensize" min="2" max="40"/>
+                <div style="flex-grow:1"></div>
+                <a id="download">Download</a>
             </div>
-            
         </div>
         <script>
             var canvas = document.getElementById('drawzone')
@@ -77,39 +75,39 @@
                 canvas.height = img.height / imgScale;
                 ctx = canvas.getContext("2d");
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                setColor("#2b76ce");
-                setPencilSize(10)
+                setColor(localStorage.getItem('color') || "#2b76ce");
                 ctx.lineCap = 'round';
                 measureScale()
-
-            window.addEventListener('resize', measureScale)
+                setPencilSize(localStorage.getItem('pensize') || 20)
+                window.addEventListener('resize', measureScale)
             }
-
+            ;
             var colorpicker = document.getElementById('colorpicker')
             function setColor(color) {
                 ctx.beginPath();
                 ctx.strokeStyle = color
                 colorpicker.value = color;
+                localStorage.setItem('color', color);
             }
-            colorpicker.addEventListener('change', function(e) {
+            colorpicker.addEventListener('input', function(e) {
                 setColor(e.target.value)
             })
-            
 
-            var pensizePreview=document.getElementById('pensizePreview'),
-            pensize=document.getElementById('pensize');
+            var pensizePreview = document.getElementById('pensizePreview')
+              , pensize = document.getElementById('pensize');
             var pencilSizeAbs;
-            function setPencilSize(s){
-                pencilSizeAbs=s;
-                pensizePreview.style.fontSize=Math.max(s,4)*2+'px';
+            function setPencilSize(s) {
+                pencilSizeAbs = s;
+                pensizePreview.style.fontSize = Math.max(s, 4) * 2 + 'px';
                 setCtxSize();
+                localStorage.setItem('pensize', s);
             }
 
-            function setCtxSize(){
+            function setCtxSize() {
                 ctx.beginPath();
-                ctx.lineWidth =pencilSizeAbs/scale;
+                ctx.lineWidth = pencilSizeAbs / scale;
             }
-            pensize.addEventListener('change', function(e){
+            pensize.addEventListener('input', function(e) {
                 setPencilSize(e.target.value)
             })
 
@@ -134,7 +132,7 @@
             function measureScale() {
                 rect = canvas.getBoundingClientRect();
                 scale = rect.width / canvas.width;
-                
+
             }
             // Get the position of the mouse relative to the canvas
             function getMousePos(canvasDom, mouseEvent) {
@@ -201,37 +199,39 @@
             download.addEventListener('click', downloadImage, false)
             function downloadImage(e) {
 
-            var blob = b64toBlob(canvas.toDataURL().split(',')[1],'data:application/octet-stream');
-            var blobUrl = URL.createObjectURL(blob);
+                var blob = b64toBlob(canvas.toDataURL().split(',')[1], 'data:application/octet-stream');
+                var blobUrl = URL.createObjectURL(blob);
 
-//             window.location = blobUrl
-//             e.preventDefault()
+                //             window.location = blobUrl
+                //             e.preventDefault()
                 this.href = blobUrl;
                 this.download = (fileinput.value.split('\\').pop().split('.')[0] || 'image') + '-edited.png';
 
             }
             //https://stackoverflow.com/a/20151856/3597869
             function b64toBlob(base64Data, contentType) {
-    contentType = contentType || '';
-    var sliceSize = 1024;
-    var byteCharacters = atob(base64Data);
-    var bytesLength = byteCharacters.length;
-    var slicesCount = Math.ceil(bytesLength / sliceSize);
-    var byteArrays = new Array(slicesCount);
+                contentType = contentType || '';
+                var sliceSize = 1024;
+                var byteCharacters = atob(base64Data);
+                var bytesLength = byteCharacters.length;
+                var slicesCount = Math.ceil(bytesLength / sliceSize);
+                var byteArrays = new Array(slicesCount);
 
-    for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
-        var begin = sliceIndex * sliceSize;
-        var end = Math.min(begin + sliceSize, bytesLength);
+                for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+                    var begin = sliceIndex * sliceSize;
+                    var end = Math.min(begin + sliceSize, bytesLength);
 
-        var bytes = new Array(end - begin);
-        for (var offset = begin, i = 0 ; offset < end; ++i, ++offset) {
-            bytes[i] = byteCharacters[offset].charCodeAt(0);
-        }
-        byteArrays[sliceIndex] = new Uint8Array(bytes);
-    }
-    return new Blob(byteArrays, { type: contentType });
-}
-
+                    var bytes = new Array(end - begin);
+                    for (var offset = begin, i = 0; offset < end; ++i,
+                    ++offset) {
+                        bytes[i] = byteCharacters[offset].charCodeAt(0);
+                    }
+                    byteArrays[sliceIndex] = new Uint8Array(bytes);
+                }
+                return new Blob(byteArrays,{
+                    type: contentType
+                });
+            }
         </script>
         <script>
             // Let's register our serviceworker

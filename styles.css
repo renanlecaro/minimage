@@ -69,12 +69,15 @@ h1 {
     left: 0;
     right: 0;
     height: 40px;
-    background: rgba(255, 255, 255, 0.24);
+    background: rgba(255, 255, 255, 0.85);
     padding: 2px 5px;
     display: flex;
     justify-content: space-around;
     align-items: center;
+    z-index: 3;
 }
+
+.topbar {}
 
 input#colorpicker {
     width: 35px;

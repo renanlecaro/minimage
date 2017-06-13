@@ -31,3 +31,9 @@ https://www.w3schools.com/tags/att_input_accept.asp
 
 How to set the font stack to a not too dirty one 
 http://www.cssfontstack.com/Arial
+
+Service workers :
+https://github.com/jakearchibald/simple-serviceworker-tutorial/blob/gh-pages/index.html
+
+Pretty icons :
+https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/

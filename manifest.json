@@ -1,0 +1,22 @@
+{
+  "short_name": "minimage",
+  "name": "Minimage.tk : Minimal image editor",
+  "icons": [
+    {
+      "src": "favicon48.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "favicon96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "favicon192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "index.html"
+}

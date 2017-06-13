@@ -19,6 +19,7 @@
             <input type="file" id="fileinput" accept="image/*"/>
         </div>
         <div id="drawAndDownload">
+            <div id="background"></div>
             <canvas id="drawzone"></canvas>
             <div class="topbar">
                 <input type="color" id="colorpicker"/>
@@ -232,6 +233,20 @@
                     type: contentType
                 });
             }
+
+            var background=document.getElementById('background')
+            background.addEventListener('click', switchBackground);
+            var currentMode=localStorage.getItem('background')||0
+            function switchBackground(){
+                currentMode++
+                localStorage.setItem('background',currentMode)
+                applyBackground()
+            }
+            function applyBackground(){
+               var options=['#FFF', '#333']
+               background.style.backgroundColor=options[currentMode%options.length]
+            }
+            applyBackground()
         </script>
         <script>
             // Let's register our serviceworker

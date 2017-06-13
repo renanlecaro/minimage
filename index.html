@@ -21,7 +21,7 @@
         <div id="drawAndDownload">
             <div id="background"></div>
             <canvas id="drawzone"></canvas>
-            <div class="topbar">
+            <div id="topbar">
                 <input type="color" id="colorpicker"/>
                 <div style="flex-grow:1"></div>
                 <span id="pensizePreview">&#x25cf;</span>
@@ -82,8 +82,7 @@
                 setPencilSize(localStorage.getItem('pensize') || 20)
                 window.addEventListener('resize', measureScale)
             }
-            ;
-            var colorpicker = document.getElementById('colorpicker')
+            ;var colorpicker = document.getElementById('colorpicker')
             function setColor(color) {
                 ctx.beginPath();
                 ctx.strokeStyle = color
@@ -119,9 +118,14 @@
                 y: 0
             };
             var lastPos = mousePos;
+
+            document.getElementById('topbar').addEventListener("mousedown", function(e) {
+                drawing = false
+            })
             canvas.addEventListener("mousedown", function(e) {
                 drawing = true;
                 lastPos = getMousePos(canvas, e);
+                drawLoop()
             }, false);
             document.addEventListener("mouseup", function(e) {
                 drawing = false;
@@ -129,11 +133,17 @@
             canvas.addEventListener("mousemove", function(e) {
                 mousePos = getMousePos(canvas, e);
             }, false);
+
+            // Avoid drawing a line on the border when leaving and re-entering canvas
+            var wasDrawing = '';
+            canvas.addEventListener("mouseleave", function(e) {
+                drawing = false;
+            }, false);
+
             var scale, rect;
             function measureScale() {
                 rect = canvas.getBoundingClientRect();
                 scale = rect.width / canvas.width;
-
             }
             // Get the position of the mouse relative to the canvas
             function getMousePos(canvasDom, mouseEvent) {
@@ -145,12 +155,11 @@
 
             // Draw to the canvas
             function renderCanvas() {
-                if (drawing) {
-                    ctx.moveTo(lastPos.x, lastPos.y);
-                    ctx.lineTo(mousePos.x, mousePos.y);
-                    ctx.stroke();
-                    lastPos = mousePos;
-                }
+                ctx.moveTo(lastPos.x, lastPos.y);
+                ctx.lineTo(mousePos.x, mousePos.y);
+                ctx.stroke();
+                lastPos = mousePos;
+
             }
 
             window.requestAnimFrame = (function(callback) {
@@ -160,10 +169,13 @@
                 ;
             })();
             // Allow for animation
-            (function drawLoop() {
-                requestAnimFrame(drawLoop);
-                renderCanvas();
-            })();
+            function drawLoop() {
+                if (drawing) {
+                    requestAnimFrame(drawLoop);
+                    renderCanvas();
+
+                }
+            }
 
             // Set up touch events for mobile, etc
             canvas.addEventListener("touchstart", function(e) {
@@ -190,6 +202,7 @@
                 });
                 canvas.dispatchEvent(mouseEvent);
             }, false);
+
             function getTouchPos(canvasDom, touchEvent) {
                 return {
                     x: (touchEvent.touches[0].clientX - rect.left) / scale,
@@ -200,13 +213,13 @@
             download.addEventListener('click', downloadImage, false)
             function downloadImage(e) {
 
-                var blob = b64toBlob(canvas.toDataURL().split(',')[1], 'data:application/octet-stream');
+                var blob = b64toBlob(canvas.toDataURL('image/jpeg', 0.5).split(',')[1], 'data:application/octet-stream');
                 var blobUrl = URL.createObjectURL(blob);
 
                 //             window.location = blobUrl
                 //             e.preventDefault()
                 this.href = blobUrl;
-                this.download = (fileinput.value.split('\\').pop().split('.')[0] || 'image') + '-edited.png';
+                this.download = (fileinput.value.split('\\').pop().split('.')[0] || 'image') + '-edited.jpg';
 
             }
             //https://stackoverflow.com/a/20151856/3597869
@@ -234,19 +247,31 @@
                 });
             }
 
-            var background=document.getElementById('background')
+            var background = document.getElementById('background')
             background.addEventListener('click', switchBackground);
-            var currentMode=localStorage.getItem('background')||0
-            function switchBackground(){
+            var currentMode = localStorage.getItem('background') || 0
+            function switchBackground() {
                 currentMode++
-                localStorage.setItem('background',currentMode)
+                localStorage.setItem('background', currentMode)
                 applyBackground()
             }
-            function applyBackground(){
-               var options=['#FFF', '#333']
-               background.style.backgroundColor=options[currentMode%options.length]
+            function applyBackground() {
+                var options = ['#FFF', '#333']
+                background.style.backgroundColor = options[currentMode % options.length]
             }
             applyBackground()
+
+            if (window.location.hash == '#Dédi-quiche') {
+                colorpicker.style.display = 'none';
+                var hue = 0;
+
+                canvas.addEventListener("mousemove", function(e) {
+                    hue++
+                ctx.beginPath();
+                    ctx.strokeStyle = 'hsl(' + (hue % 360) + ',100%,50%)'
+                    
+                })
+            }
         </script>
         <script>
             // Let's register our serviceworker

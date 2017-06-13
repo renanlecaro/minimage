@@ -6,19 +6,13 @@ importScripts('serviceworker-cache-polyfill.js');
 // This only happens once, when the browser sees this
 // version of the ServiceWorker for the first time.
 self.addEventListener('install', function(event) {
-  // We pass a promise to event.waitUntil to signal how 
-  // long install takes, and if it failed
-  event.waitUntil(
-    // We open a cache…
+    // We pass a promise to event.waitUntil to signal how 
+    // long install takes, and if it failed
+    event.waitUntil(// We open a cache…
     caches.open('simple-sw-v1').then(function(cache) {
-      // And add resources to it
-      return cache.addAll([
-        './index.html',
-        './styles.css',
-        "./logo-min.svg"
-      ]);
-    })
-  );
+        // And add resources to it
+        return cache.addAll(['./index.html', './styles.css', "./logo-min.svg"]);
+    }));
 });
 
 // // The fetch event happens for the page request with the
@@ -41,15 +35,15 @@ self.addEventListener('install', function(event) {
 // });
 
 self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.open('simple-sw-v1').then(function(cache) {
-      return cache.match(event.request).then(function(response) {
-        var fetchPromise = fetch(event.request).then(function(networkResponse) {
-          cache.put(event.request, networkResponse.clone());
-          return networkResponse;
+    event.respondWith(caches.open('simple-sw-v1').then(function(cache) {
+        return Promise.all([cache.match(event.request), fetch(event.request)])
+        .then(function(twoOptions) {
+            var cached = twoOptions[0]
+              , live = twoOptions[1];
+            if (live)
+                cache.put(event.request, live.clone());
+            return live || cached
         })
-        return response || fetchPromise;
-      })
-    })
-  );
+
+    }));
 });

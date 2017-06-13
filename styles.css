@@ -49,6 +49,7 @@ canvas#drawzone {
     border-radius: 2px;
     width: auto;
     height: auto;
+    cursor: default;
 }
 
 #fileinput {
@@ -71,7 +72,7 @@ h1 {
     font-style: italic;
 }
 
-.topbar {
+#topbar {
     position: fixed;
     top: 0;
     left: 0;
@@ -85,7 +86,6 @@ h1 {
     z-index: 3;
 }
 
-.topbar {}
 
 input#colorpicker {
     width: 35px;

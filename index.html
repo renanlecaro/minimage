@@ -22,9 +22,10 @@
             <div id="background"></div>
             <canvas id="drawzone"></canvas>
             <div id="topbar">
-                <input type="color" id="colorpicker"/>
                 <div style="flex-grow:1"></div>
-                <span id="pensizePreview">&#x25cf;</span>
+                
+                <input type="color" id="colorpicker"/>
+                <label id="pensizePreview" for="colorpicker">&#x25cf;</label>
                 <input type="range" id="pensize" min="2" max="40"/>
                 <div style="flex-grow:1"></div>
                 <a id="download">Download</a>
@@ -87,6 +88,7 @@
                 ctx.beginPath();
                 ctx.strokeStyle = color
                 colorpicker.value = color;
+                pensizePreview.style.color=color;
                 localStorage.setItem('color', color);
             }
             colorpicker.addEventListener('input', function(e) {
@@ -269,15 +271,15 @@
                     hue++
                 ctx.beginPath();
                     ctx.strokeStyle = 'hsl(' + (hue % 360) + ',100%,50%)'
-                    
+
                 })
             }
         </script>
         <script>
-            // Let's register our serviceworker
-            navigator.serviceWorker.register('sw.js', {
-                scope: './'
-            });
+//             // Let's register our serviceworker
+//             navigator.serviceWorker.register('sw.js', {
+//                 scope: './'
+//             });
         </script>
     </body>
 </html>

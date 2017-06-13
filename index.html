@@ -1,247 +1,274 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-        <title>Draw on images</title>
+        <title>Minimage.tk : Minimal image editor</title>
+        <meta name="description" content="Free web app to draw on your images. Works on mobile. No watermark."/>
     </head>
     <body>
         <div id="inputForAFile">
-            <h1>Click here to load an image to edit</h1>
-            <input type="file" id="fileinput" accept="image/*"/>
-        </div>
-        <div id="drawAndDownload">
-            <canvas id="drawzone"></canvas>
-            <a id="download">Download</a>
-            <input type="color" id="colorpicker"/>
-        </div>
-        <script>
-            var canvas = document.getElementById('drawzone')
-            var download = document.getElementById('download')
+            <div id="readme">
+                <img src="./logo-min.svg"/>
+                <ol>
+                    <li>Choose an image</li>
+                    <li>Touch the image to draw on it</li>
+                    <li>Press download</li>
+                </ol>
+                <p>Click on the background around the image to change draw color.
+            </p>
+                <p>To make a new image, reload the page.</p>
+</div><input type="file" id="fileinput" accept="image/*"/>
+</div>
+<div id="drawAndDownload">
+    <canvas id="drawzone"></canvas>
+    <a id="download">Download</a>
+    <input type="color" id="colorpicker"/>
+</div>
+<script>
+    var canvas = document.getElementById('drawzone')
+    var download = document.getElementById('download')
 
-            var inputForAFile = document.getElementById('inputForAFile');
-                
-            var drawAndDownload = document.getElementById('drawAndDownload');
+    var inputForAFile = document.getElementById('inputForAFile');
+
+    var drawAndDownload = document.getElementById('drawAndDownload');
+
+    var fileinput = document.getElementById('fileinput');
+    function switchToMode(mode) {
+        if (mode == "fileinput") {
+            inputForAFile.style.display = "";
+            drawAndDownload.style.display = "none";
+        } else {
+            inputForAFile.style.display = "none";
+            drawAndDownload.style.display = "";
+        }
+
+    }
+    switchToMode('fileinput')
+    fileinput.addEventListener('change', fileLoaded)
+
+    var fileReader;
+    function fileLoaded(e) {
+        console.log('file changed')
+        var file = e.target.files[0];
+        fileReader = new FileReader();
+        fileReader.onload = createImageWithFileContent;
+        fileReader.readAsDataURL(file);
+    }
+    var img;
+    function createImageWithFileContent() {
+
+        console.log('creating image')
+        img = new Image();
+        img.onload = imageLoaded;
+        img.src = fileReader.result
+    }
+    var ctx;
+    function imageLoaded() {
+        console.log('image loaded')
+        switchToMode('canvas')
+        var imgScale = Math.max(img.width / window.innerWidth / 2, img.height / window.innerHeight / 2, 1)
+        console.log(imgScale)
+
+        canvas.width = img.width / imgScale;
+        canvas.height = img.height / imgScale;
+        ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         
-            var fileinput = document.getElementById('fileinput');
-            function switchToMode(mode) {
-                if (mode == "fileinput") {
-                    inputForAFile.style.display = "";
-                    drawAndDownload.style.display = "none";
-                } else {
-                    inputForAFile.style.display = "none";
-                    drawAndDownload.style.display = "";
-                }
+        setColor("#222222");
+        ctx.lineCap = 'round';
+        measureScale()
+    }
 
-            }
-            switchToMode('fileinput')
-            fileinput.addEventListener('change', fileLoaded)
 
-            var fileReader;
-            function fileLoaded(e) {
-                console.log('file changed')
-                var file = e.target.files[0];
-                fileReader = new FileReader();
-                fileReader.onload = createImageWithFileContent;
-                fileReader.readAsDataURL(file);
-            }
-            var img;
-            function createImageWithFileContent() {
+    var colorpicker = document.getElementById('colorpicker')
+    function setColor(color) {
+        ctx.beginPath();
+        ctx.strokeStyle = color
+        document.body.style.background = color;
+        colorpicker.value = color;
+    }
+    colorpicker.addEventListener('change', function(e) {
+        setColor(e.target.value)
+    })
 
-                console.log('creating image')
-                img = new Image();
-                img.onload = imageLoaded;
-                img.src = fileReader.result
-            }
-            var ctx;
-            function imageLoaded() {
-                console.log('image loaded')
-                switchToMode('canvas')
-                var imgScale = Math.max(img.width / window.innerWidth /2, img.height / window.innerHeight/2, 1)
-                console.log(imgScale)
+    var drawing = false;
 
-                canvas.width = img.width / imgScale;
-                canvas.height = img.height / imgScale;
-                ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                setupDrawStyle()
-                measureScale()
-            }
-            function setupDrawStyle() {
-                setColor("#222222");
+    var mousePos = {
+        x: 0,
+        y: 0
+    };
+    var lastPos = mousePos;
+    canvas.addEventListener("mousedown", function(e) {
+        drawing = true;
+        lastPos = getMousePos(canvas, e);
+    }, false);
+    document.addEventListener("mouseup", function(e) {
+        drawing = false;
+    }, false);
+    canvas.addEventListener("mousemove", function(e) {
+        mousePos = getMousePos(canvas, e);
+    }, false);
+    var scale, rect;
+    function measureScale() {
+        rect = canvas.getBoundingClientRect();
 
-                ctx.lineCap = 'round';
-            }
+        scale = rect.width / canvas.width;
+        console.log(scale)
+        ctx.lineWidth = 10 / scale;
+    }
+    window.addEventListener('resize', measureScale)
+    // Get the position of the mouse relative to the canvas
+    function getMousePos(canvasDom, mouseEvent) {
+        return {
+            x: (mouseEvent.clientX - rect.left) / scale,
+            y: (mouseEvent.clientY - rect.top) / scale
+        };
+    }
 
-            var colorpicker=document.getElementById('colorpicker')
-            function setColor(color){
-                    ctx.beginPath();
-                    ctx.strokeStyle=color
-                    document.body.style.background=color;
-                        colorpicker.value=color;
-            }
-            colorpicker.addEventListener('change', function(e){
-                    setColor(e.target.value)
-            })
+    // Draw to the canvas
+    function renderCanvas() {
+        if (drawing) {
+            ctx.moveTo(lastPos.x, lastPos.y);
+            ctx.lineTo(mousePos.x, mousePos.y);
+            ctx.stroke();
+            lastPos = mousePos;
+        }
+    }
 
-            var drawing = false;
+    window.requestAnimFrame = (function(callback) {
+        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimaitonFrame || function(callback) {
+            window.setTimeout(callback, 1000 / 60);
+        }
+        ;
+    })();
+    // Allow for animation
+    (function drawLoop() {
+        requestAnimFrame(drawLoop);
+        renderCanvas();
+    })();
 
-            var mousePos = {
-                x: 0,
-                y: 0
-            };
-            var lastPos = mousePos;
-            canvas.addEventListener("mousedown", function(e) {
-                drawing = true;
-                lastPos = getMousePos(canvas, e);
-            }, false);
-            document.addEventListener("mouseup", function(e) {
-                drawing = false;
-            }, false);
-            canvas.addEventListener("mousemove", function(e) {
-                mousePos = getMousePos(canvas, e);
-            }, false);
-            var scale, rect;
-            function measureScale() {
-                rect = canvas.getBoundingClientRect();
+    // Set up touch events for mobile, etc
+    canvas.addEventListener("touchstart", function(e) {
+        e.preventDefault()
+        mousePos = getTouchPos(canvas, e);
+        var touch = e.touches[0];
+        var mouseEvent = new MouseEvent("mousedown",{
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+    }, false);
+    canvas.addEventListener("touchend", function(e) {
+        e.preventDefault()
+        var mouseEvent = new MouseEvent("mouseup",{});
+        canvas.dispatchEvent(mouseEvent);
+    }, false);
+    canvas.addEventListener("touchmove", function(e) {
+        e.preventDefault()
+        var touch = e.touches[0];
+        var mouseEvent = new MouseEvent("mousemove",{
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+    }, false);
+    function getTouchPos(canvasDom, touchEvent) {
+        return {
+            x: (touchEvent.touches[0].clientX - rect.left) / scale,
+            y: (touchEvent.touches[0].clientY - rect.top) / scale
+        };
+    }
 
-                scale = rect.width / canvas.width;
-                console.log(scale)
-                ctx.lineWidth = 10 / scale;
-            }
-            window.addEventListener('resize', measureScale)
-            // Get the position of the mouse relative to the canvas
-            function getMousePos(canvasDom, mouseEvent) {
-                return {
-                    x: (mouseEvent.clientX - rect.left) / scale,
-                    y: (mouseEvent.clientY - rect.top) / scale
-                };
-            }
+    download.addEventListener('click', downloadImage, false)
+    function downloadImage(e) {
+        this.href = canvas.toDataURL();
+        this.download = (fileinput.value.split('\\').pop().split('.')[0] || 'image') + '-edited.png';
 
-            // Draw to the canvas
-            function renderCanvas() {
-                if (drawing) {
-                    ctx.moveTo(lastPos.x, lastPos.y);
-                    ctx.lineTo(mousePos.x, mousePos.y);
-                    ctx.stroke();
-                    lastPos = mousePos;
-                }
-            }
+    }
+</script>
+<style>
+    body {
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
 
-            window.requestAnimFrame = (function(callback) {
-                return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimaitonFrame || function(callback) {
-                    window.setTimeout(callback, 1000 / 60);
-                }
-                ;
-            })();
-            // Allow for animation
-            (function drawLoop() {
-                requestAnimFrame(drawLoop);
-                renderCanvas();
-            })();
+    div#inputForAFile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-            // Set up touch events for mobile, etc
-            canvas.addEventListener("touchstart", function(e) {
-                e.preventDefault()
-                mousePos = getTouchPos(canvas, e);
-                var touch = e.touches[0];
-                var mouseEvent = new MouseEvent("mousedown",{
-                    clientX: touch.clientX,
-                    clientY: touch.clientY
-                });
-                canvas.dispatchEvent(mouseEvent);
-            }, false);
-            canvas.addEventListener("touchend", function(e) {
-                e.preventDefault()
-                var mouseEvent = new MouseEvent("mouseup",{});
-                canvas.dispatchEvent(mouseEvent);
-            }, false);
-            canvas.addEventListener("touchmove", function(e) {
-                e.preventDefault()
-                var touch = e.touches[0];
-                var mouseEvent = new MouseEvent("mousemove",{
-                    clientX: touch.clientX,
-                    clientY: touch.clientY
-                });
-                canvas.dispatchEvent(mouseEvent);
-            }, false);
-            function getTouchPos(canvasDom, touchEvent) {
-                return {
-                    x: (touchEvent.touches[0].clientX - rect.left) / scale,
-                    y: (touchEvent.touches[0].clientY - rect.top) / scale
-                };
-            }
+    #readme {
+        pointer-events: none;
+        max-width: 400px;
+        padding: 1rem;
+        color: #666;
+    }
 
-            download.addEventListener('click', downloadImage, false)
-            function downloadImage(e) {
-                this.href = canvas.toDataURL();
-                this.download = (fileinput.value.split('\\').pop().split('.')[0] || 'image')+'-edited.png';
+    #readme img {
+        width: 100%;
+    }
 
-            }
-        </script>
-        <style>
-            body {
-                font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-                margin: 0;
-                padding: 0;
-            }
+    #inputForAFile ,#fileinput,canvas#drawzone {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        box-sizing: border-box;
+    }
 
-            #inputForAFile {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                color: #666;
-            }
+    canvas#drawzone {
+        max-width: 100%;
+        max-height: 100%;
+        margin: auto;
+        z-index: 2;
+    }
 
-            #inputForAFile ,#fileinput,canvas#drawzone {
-                position: absolute;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                right: 0;
-                box-sizing: border-box;
-            }
+    #fileinput {
+        width: 100%;
+        opacity: 0;
+    }
 
-            canvas#drawzone {
-                max-width: 100%;
-                max-height: 100%;
-                margin: auto;
-                z-index:2;
-            }
+    #download,#colorpicker {
+        position: absolute;
+        text-align: center;
+    }
 
-            #fileinput {
-                width: 100%;
-                opacity: 0;
-            }
+    #download {
+        top: 2px;
+        width: 100px;
+        background: #007eab;
+        padding: 5px;
+        z-index: 3;
+        right: 2px;
+        left: 2px;
+        color: white;
+        box-shadow: 0 2px 0 #003c51;
+        text-decoration: none;
+        border-radius: 2px;
+        margin: auto;
+        cursor:pointer;
+        transition:transform 0.2s, box-shadow 0.2s;
+    }
+    #download:focus, #download:hover{
+        background:#006c93;
+    }
+    #download:active{
+        transform:translate(0,2px);
+        box-shadow: 0 0 0 #003c51;
+    }
 
-            #download,#colorpicker {
-                position: absolute;
-                top: 2px;
-                width: 100px;
-                background: #007eab;
-                padding: 5px;
-                text-align: center;
-                margin: auto;
-                border-radius: 2px;
-                color: white;
-                box-shadow: 0 2px 0 #003c51;
-                z-index:10;
-            }
-            #download{
-                z-index:3;
-                right: 2px;
-                left:2px;
-            }input#colorpicker {
-    display: block;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    opacity: 0;
-}
-            
-        </style>
-    </body>
-</html>
+    input#colorpicker {
+        display: block;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        opacity: 0;
+    }
+</style>
+</body></html>

@@ -11,10 +11,8 @@
         <div id="inputForAFile">
             <div id="readme">
                 <img src="./logo-min.svg"/>
-                <p>Minimage lets you draw on a picture and download the result. No need to install anything on your already saturated phone.</p>
                 <h1>Tap to select an image</h1>
-                <p class="tip">In the next screen, to change pen color, click outside of your image.
-            </p>
+                <p class="tip">Downloading sometimes fails if you are within facebook. Try opening the page in chrome.</p>
             </div>
             <input type="file" id="fileinput" accept="image/*"/>
         </div>
@@ -22,12 +20,11 @@
             <div id="background"></div>
             <canvas id="drawzone"></canvas>
             <div id="topbar">
-                <div style="flex-grow:1"></div>
-                
                 <input type="color" id="colorpicker"/>
-                <label id="pensizePreview" for="colorpicker">&#x25cf;</label>
+                <label id="pensizePreview" for="colorpicker">
+                    <div id="pensizePreviewDot">&#x25cf;</div>
+                </label>
                 <input type="range" id="pensize" min="2" max="40"/>
-                <div style="flex-grow:1"></div>
                 <a id="download">Download</a>
             </div>
         </div>
@@ -80,7 +77,11 @@
                 setColor(localStorage.getItem('color') || "#2b76ce");
                 ctx.lineCap = 'round';
                 measureScale()
-                setPencilSize(localStorage.getItem('pensize') || 20)
+                    setPencilSize(pensizeAtLoad)
+                animatePenSize(60, function() {
+                    setPencilSize(pensizeAtLoad)
+                })
+                //setPencilSize()
                 window.addEventListener('resize', measureScale)
             }
             ;var colorpicker = document.getElementById('colorpicker')
@@ -88,7 +89,7 @@
                 ctx.beginPath();
                 ctx.strokeStyle = color
                 colorpicker.value = color;
-                pensizePreview.style.color=color;
+                pensizePreview.style.color = color;
                 localStorage.setItem('color', color);
             }
             colorpicker.addEventListener('input', function(e) {
@@ -96,13 +97,18 @@
             })
 
             var pensizePreview = document.getElementById('pensizePreview')
+              , pensizePreviewDot = document.getElementById('pensizePreviewDot')
               , pensize = document.getElementById('pensize');
             var pencilSizeAbs;
             function setPencilSize(s) {
                 pencilSizeAbs = s;
-                pensizePreview.style.fontSize = Math.max(s, 4) * 2 + 'px';
+                setPreviewSize(s)
                 setCtxSize();
                 localStorage.setItem('pensize', s);
+            }
+            function setPreviewSize(s) {
+                pensizePreviewDot.style.transform = 'scale('+Math.max(s, 4)/10+')';
+
             }
 
             function setCtxSize() {
@@ -269,17 +275,33 @@
 
                 canvas.addEventListener("mousemove", function(e) {
                     hue++
-                ctx.beginPath();
+                    ctx.beginPath();
                     ctx.strokeStyle = 'hsl(' + (hue % 360) + ',100%,50%)'
 
                 })
             }
+
+            let radius = 10
+            let pensizeAtLoad = parseInt(localStorage.getItem('pensize')) || 20
+
+            function animatePenSize(iteration, callback) {
+                let angle = 2 * Math.PI * (iteration % 60) / 60;
+                let currentPensize = pensizeAtLoad + Math.sin(angle) * radius
+
+                setPreviewSize(currentPensize)
+                pensize.value = '' + currentPensize
+                if (!iteration)
+                    return callback()
+                requestAnimFrame(function() {
+                    animatePenSize(iteration - 1, callback)
+                })
+            }
         </script>
         <script>
-//             // Let's register our serviceworker
-//             navigator.serviceWorker.register('sw.js', {
-//                 scope: './'
-//             });
+            //             // Let's register our serviceworker
+            //             navigator.serviceWorker.register('sw.js', {
+            //                 scope: './'
+            //             });
         </script>
     </body>
 </html>

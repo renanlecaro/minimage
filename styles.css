@@ -5,9 +5,9 @@ body {
 }
 
 div#inputForAFile {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    /* display: flex; */
+    /* align-items: center; */
+    /* justify-content: center; */
 }
 
 #readme {
@@ -15,6 +15,13 @@ div#inputForAFile {
     max-width: 400px;
     padding: 1rem;
     color: #666;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    margin:0 auto;
 }
 
 #readme img {
@@ -81,7 +88,7 @@ h1 {
     background: rgb(255, 255, 255);
     padding: 2px 5px;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     z-index: 3;
 }
@@ -98,32 +105,43 @@ input#colorpicker {
     margin: 0;
 }
 #pensizePreview {
-    display: flex;
     width: 40px;
-    color: #868686;
+    font-size: 20px;
+}
+#download{
+    width:100px;
+    color: #242424;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 80%;
+}
+#pensizePreview ,
+#download {
+    
+    display: flex;
     justify-content: center;
     align-items: center;
-    height: 40px;
-}
-#download {
-    width: 100px;
-    /* background: rgba(0, 0, 0, 0.06); */
-    padding: 5px;
-    z-index: 3;
-    right: 2px;
-    left: 2px;
-    color: rgba(0, 0, 0, 0.63);
-    /* box-shadow: 0 2px 0 rgba(0, 0, 0, 0.19); */
+    align-self:stretch;
+
     text-decoration: none;
-    border-radius: 2px;
-    margin: auto;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    text-align: center;
+    cursor: pointer;    
+    
 }
-#download:focus, #download:hover {
+
+
+#download:focus,
+ #download:hover,
+ #pensizePreview:focus,
+ #pensizePreview:hover {
     background: rgba(0, 0, 0, 0.15);
 }
+
+ #download:active,
+ #pensizePreview:active{
+     color:white;
+     background:#333;
+ }
+
 div#background {
     background:white;
     position: fixed;

@@ -1,19 +1,19 @@
 {
-  "short_name": "minimage",
+  "short_name": "Minimage",
   "name": "Minimage.tk : Minimal image editor",
   "icons": [
     {
-      "src": "favicon48.png",
+      "src": "./images/favicon48.png",
       "type": "image/png",
       "sizes": "48x48"
     },
     {
-      "src": "favicon96.png",
+      "src": "./images/favicon96.png",
       "type": "image/png",
       "sizes": "96x96"
     },
     {
-      "src": "favicon192.png",
+      "src": "./images/favicon192.png",
       "type": "image/png",
       "sizes": "192x192"
     }

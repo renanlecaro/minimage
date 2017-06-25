@@ -1,6 +1,6 @@
 <html>
     <head>
-        <link rel="icon" href="favicon48.png"/>
+        <link rel="icon" href="./images/favicon48.png"/>
         <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
         <title>Minimage : minimal image editor</title>
         <meta name="description" content="Free web app to draw on your images. Works on mobile. No watermark."/>
@@ -10,9 +10,9 @@
     <body>
         <div id="inputForAFile">
             <div id="readme">
-                <img src="./logo-min.svg"/>
+                <img src="./images/logo-min.svg"/>
                 <h1>Tap to select an image</h1>
-                <p class="tip">Downloading sometimes fails if you are within facebook. Try opening the page in chrome.</p>
+                <p class="tip">Downloading fails if you are within facebook. Try opening the page in chrome instead.</p>
             </div>
             <input type="file" id="fileinput" accept="image/*"/>
         </div>
@@ -22,287 +22,13 @@
             <div id="topbar">
                 <input type="color" id="colorpicker"/>
                 <label id="pensizePreview" for="colorpicker">
-                    <div id="pensizePreviewDot">&#x25cf;</div>
+                    <div id="pensizePreviewDot"></div>
                 </label>
                 <input type="range" id="pensize" min="2" max="40"/>
                 <a id="download">Download</a>
             </div>
         </div>
-        <script>
-            var canvas = document.getElementById('drawzone')
-            var download = document.getElementById('download')
-            var readme = document.getElementById('readme')
-
-            var inputForAFile = document.getElementById('inputForAFile');
-
-            var drawAndDownload = document.getElementById('drawAndDownload');
-
-            var fileinput = document.getElementById('fileinput');
-            function switchToMode(mode) {
-                if (mode == "fileinput") {
-                    inputForAFile.style.display = "";
-                    drawAndDownload.style.display = "none";
-                } else {
-                    inputForAFile.style.display = "none";
-                    drawAndDownload.style.display = "";
-                }
-
-            }
-            switchToMode('fileinput')
-            fileinput.addEventListener('change', fileLoaded)
-
-            var fileReader;
-            function fileLoaded(e) {
-                readme.innerHTML = "<h1>Loading ...</h1>";
-                var file = e.target.files[0];
-                fileReader = new FileReader();
-                fileReader.onload = createImageWithFileContent;
-                fileReader.readAsDataURL(file);
-            }
-            var img;
-            function createImageWithFileContent() {
-                img = new Image();
-                img.onload = imageLoaded;
-                img.src = fileReader.result
-            }
-            var ctx;
-            function imageLoaded() {
-                switchToMode('canvas')
-                // Scale image to fit in twice screen size. An heuristic to avoid working on massive images on small devices
-                var maxRes=Math.max(window.innerHeight,window.innerWidth) 
-                var imgScale = Math.max(img.width / maxRes, img.height / maxRes, 1)
-                canvas.width = img.width / imgScale;
-                canvas.height = img.height / imgScale;
-                ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                setColor(localStorage.getItem('color') || "#2b76ce");
-                ctx.lineCap = 'round';
-                measureScale()
-                    setPencilSize(pensizeAtLoad)
-                animatePenSize(60, function() {
-                    setPencilSize(pensizeAtLoad)
-                })
-                //setPencilSize()
-                window.addEventListener('resize', measureScale)
-            }
-            ;var colorpicker = document.getElementById('colorpicker')
-            function setColor(color) {
-                ctx.beginPath();
-                ctx.strokeStyle = color
-                colorpicker.value = color;
-                pensizePreview.style.color = color;
-                localStorage.setItem('color', color);
-            }
-            colorpicker.addEventListener('input', function(e) {
-                setColor(e.target.value)
-            })
-
-            var pensizePreview = document.getElementById('pensizePreview')
-              , pensizePreviewDot = document.getElementById('pensizePreviewDot')
-              , pensize = document.getElementById('pensize');
-            var pencilSizeAbs;
-            function setPencilSize(s) {
-                pencilSizeAbs = s;
-                setPreviewSize(s)
-                setCtxSize();
-                localStorage.setItem('pensize', s);
-            }
-            function setPreviewSize(s) {
-                pensizePreviewDot.style.transform = 'scale('+Math.max(s, 4)/10+')';
-
-            }
-
-            function setCtxSize() {
-                ctx.beginPath();
-                ctx.lineWidth = pencilSizeAbs / scale;
-            }
-            pensize.addEventListener('input', function(e) {
-                setPencilSize(e.target.value)
-            })
-
-            var drawing = false;
-
-            var mousePos = {
-                x: 0,
-                y: 0
-            };
-            var lastPos = mousePos;
-
-            document.getElementById('topbar').addEventListener("mousedown", function(e) {
-                drawing = false
-            })
-            canvas.addEventListener("mousedown", function(e) {
-                drawing = true;
-                lastPos = getMousePos(canvas, e);
-                drawLoop()
-            }, false);
-            document.addEventListener("mouseup", function(e) {
-                drawing = false;
-            }, false);
-            canvas.addEventListener("mousemove", function(e) {
-                mousePos = getMousePos(canvas, e);
-            }, false);
-
-            // Avoid drawing a line on the border when leaving and re-entering canvas
-            var wasDrawing = '';
-            canvas.addEventListener("mouseleave", function(e) {
-                drawing = false;
-            }, false);
-
-            var scale, rect;
-            function measureScale() {
-                rect = canvas.getBoundingClientRect();
-                scale = rect.width / canvas.width;
-            }
-            // Get the position of the mouse relative to the canvas
-            function getMousePos(canvasDom, mouseEvent) {
-                return {
-                    x: (mouseEvent.clientX - rect.left) / scale,
-                    y: (mouseEvent.clientY - rect.top) / scale
-                };
-            }
-
-            // Draw to the canvas
-            function renderCanvas() {
-                ctx.moveTo(lastPos.x, lastPos.y);
-                ctx.lineTo(mousePos.x, mousePos.y);
-                ctx.stroke();
-                lastPos = mousePos;
-
-            }
-
-            window.requestAnimFrame = (function(callback) {
-                return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimaitonFrame || function(callback) {
-                    window.setTimeout(callback, 1000 / 60);
-                }
-                ;
-            })();
-            // Allow for animation
-            function drawLoop() {
-                if (drawing) {
-                    requestAnimFrame(drawLoop);
-                    renderCanvas();
-
-                }
-            }
-
-            // Set up touch events for mobile, etc
-            canvas.addEventListener("touchstart", function(e) {
-                e.preventDefault()
-                mousePos = getTouchPos(canvas, e);
-                var touch = e.touches[0];
-                var mouseEvent = new MouseEvent("mousedown",{
-                    clientX: touch.clientX,
-                    clientY: touch.clientY
-                });
-                canvas.dispatchEvent(mouseEvent);
-            }, false);
-            canvas.addEventListener("touchend", function(e) {
-                e.preventDefault()
-                var mouseEvent = new MouseEvent("mouseup",{});
-                canvas.dispatchEvent(mouseEvent);
-            }, false);
-            canvas.addEventListener("touchmove", function(e) {
-                e.preventDefault()
-                var touch = e.touches[0];
-                var mouseEvent = new MouseEvent("mousemove",{
-                    clientX: touch.clientX,
-                    clientY: touch.clientY
-                });
-                canvas.dispatchEvent(mouseEvent);
-            }, false);
-
-            function getTouchPos(canvasDom, touchEvent) {
-                return {
-                    x: (touchEvent.touches[0].clientX - rect.left) / scale,
-                    y: (touchEvent.touches[0].clientY - rect.top) / scale
-                };
-            }
-
-            download.addEventListener('click', downloadImage, false)
-            function downloadImage(e) {
-
-//                 var blob = b64toBlob(canvas.toDataURL('image/jpeg', 0.5).split(',')[1], 'data:application/octet-stream');
-//                 var blobUrl = URL.createObjectURL(blob);
-
-                //             window.location = blobUrl
-                //             e.preventDefault()
-                this.href = canvas.toDataURL('image/jpeg', 0.5);
-                this.download = (fileinput.value.split('\\').pop().split('.')[0] || 'image') + '-edited.jpg';
-
-            }
-//             //https://stackoverflow.com/a/20151856/3597869
-//             function b64toBlob(base64Data, contentType) {
-//                 contentType = contentType || '';
-//                 var sliceSize = 1024;
-//                 var byteCharacters = atob(base64Data);
-//                 var bytesLength = byteCharacters.length;
-//                 var slicesCount = Math.ceil(bytesLength / sliceSize);
-//                 var byteArrays = new Array(slicesCount);
-
-//                 for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
-//                     var begin = sliceIndex * sliceSize;
-//                     var end = Math.min(begin + sliceSize, bytesLength);
-
-//                     var bytes = new Array(end - begin);
-//                     for (var offset = begin, i = 0; offset < end; ++i,
-//                     ++offset) {
-//                         bytes[i] = byteCharacters[offset].charCodeAt(0);
-//                     }
-//                     byteArrays[sliceIndex] = new Uint8Array(bytes);
-//                 }
-//                 return new Blob(byteArrays,{
-//                     type: contentType
-//                 });
-//             }
-
-            var background = document.getElementById('background')
-            background.addEventListener('click', switchBackground);
-            var currentMode = localStorage.getItem('background') || 0
-            function switchBackground() {
-                currentMode++
-                localStorage.setItem('background', currentMode)
-                applyBackground()
-            }
-            function applyBackground() {
-                var options = ['#FFF', '#333']
-                background.style.backgroundColor = options[currentMode % options.length]
-            }
-            applyBackground()
-
-            if (window.location.hash == '#Dédi-quiche') {
-                colorpicker.style.display = 'none';
-                var hue = 0;
-
-                canvas.addEventListener("mousemove", function(e) {
-                    hue++
-                    ctx.beginPath();
-                    ctx.strokeStyle = 'hsl(' + (hue % 360) + ',100%,50%)'
-
-                })
-            }
-
-            let radius = 10
-            let pensizeAtLoad = parseInt(localStorage.getItem('pensize')) || 20
-
-            function animatePenSize(iteration, callback) {
-                let angle = 2 * Math.PI * (iteration % 60) / 60;
-                let currentPensize = pensizeAtLoad + Math.sin(angle) * radius
-
-                setPreviewSize(currentPensize)
-                pensize.value = '' + currentPensize
-                if (!iteration)
-                    return callback()
-                requestAnimFrame(function() {
-                    animatePenSize(iteration - 1, callback)
-                })
-            }
-        </script>
-        <script>
-            //             // Let's register our serviceworker
-            //             navigator.serviceWorker.register('sw.js', {
-            //                 scope: './'
-            //             });
+        <script src="./app.js">
         </script>
     </body>
 </html>

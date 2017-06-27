@@ -7,11 +7,13 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-preset-env": "^1.5.2",
+    "babili": "^0.1.4",
     "watch-less": "0.0.4"
   },
   "scripts": {
     "transpile-js": "babel --watch src -d build",
-    "transpile-css": "watch-less -d src -r build"
+    "transpile-css": "watch-less -d src -r build",
+    "transpile-js-compress":"babili src -d build"
   },
   "repository": {
     "type": "git",

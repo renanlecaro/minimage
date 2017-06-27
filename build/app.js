@@ -1,9 +1,15 @@
-document.addEventListener("DOMContentLoaded", function() {
-    askForImage(file=>loadImage(file, image=>letUserDrawAndDownload(image)))
-})
-const byId = document.getElementById.bind(document)
-  , DEFAULTCOLOR = "#2b76ce"
-  , DEFAULTSIZE = 20
+"use strict";
+
+document.addEventListener("DOMContentLoaded", function () {
+    askForImage(function (file) {
+        return loadImage(file, function (image) {
+            return letUserDrawAndDownload(image);
+        });
+    });
+});
+var byId = document.getElementById.bind(document),
+    DEFAULTCOLOR = "#2b76ce",
+    DEFAULTSIZE = 20;
 
 // Setup of the welcome / pick an image UI
 function askForImage(callback) {
@@ -14,11 +20,11 @@ function askForImage(callback) {
 
     // Listen for file changes
     var fileinput = byId('fileinput');
-    fileinput.addEventListener('change', fileChanged)
+    fileinput.addEventListener('change', fileChanged);
     function fileChanged(changeEvent) {
         fileinput.removeEventListener('change', fileChanged);
         // go to next step
-        callback(changeEvent.target.files[0])
+        callback(changeEvent.target.files[0]);
     }
 }
 
@@ -27,29 +33,33 @@ function loadImage(fileToLoad, callback) {
 
     byId('readme').innerHTML = "<h1>Loading ...</h1>";
 
-    let fileReader = new FileReader();
-    fileReader.onload = ()=>createImageWithFileContent(fileReader.result);
+    var fileReader = new FileReader();
+    fileReader.onload = function () {
+        return createImageWithFileContent(fileReader.result);
+    };
     fileReader.readAsDataURL(fileToLoad);
 
     function createImageWithFileContent(result) {
-        let img = new Image();
-        img.onload = ()=>callback(img)
-        img.src = result
+        var img = new Image();
+        img.onload = function () {
+            return callback(img);
+        };
+        img.src = result;
     }
 }
 
 // Lets the user draw on the loaded image
 function letUserDrawAndDownload(img) {
 
-    const canvas = byId('drawzone')
+    var canvas = byId('drawzone');
 
     // Switch to isDrawing mode
     byId('inputForAFile').style.display = "none";
     byId('drawAndDownload').style.display = "";
 
     // Fits the canvas to screen
-    var maxRes = Math.max(window.innerHeight, window.innerWidth)
-    var imgScale = Math.max(img.width / maxRes, img.height / maxRes, 1)
+    var maxRes = Math.max(window.innerHeight, window.innerWidth);
+    var imgScale = Math.max(img.width / maxRes, img.height / maxRes, 1);
     canvas.width = img.width / imgScale;
     canvas.height = img.height / imgScale;
 
@@ -63,50 +73,53 @@ function letUserDrawAndDownload(img) {
         rect = canvas.getBoundingClientRect();
         scale = rect.width / canvas.width;
     }
-    measureScale()
+    measureScale();
     window.addEventListener('resize', measureScale);
 
     // Initialize color picker events
-    const colorpicker = byId('colorpicker')
-      , pensizePreview = byId('pensizePreview')
-      , pensizePreviewDot = byId('pensizePreviewDot')
-      , pensize = byId('pensize');
+    var colorpicker = byId('colorpicker'),
+        pensizePreview = byId('pensizePreview'),
+        pensizePreviewDot = byId('pensizePreviewDot'),
+        pensize = byId('pensize');
 
     function setColor(color) {
-        pensizePreviewDot.style.background = ctx.strokeStyle = colorpicker.value = color
+        pensizePreviewDot.style.background = ctx.strokeStyle = colorpicker.value = color;
         localStorage.setItem('color', color);
     }
     setColor(localStorage.getItem('color') || DEFAULTCOLOR);
-    colorpicker.addEventListener('input', e=>setColor(e.target.value))
-    
+    colorpicker.addEventListener('input', function (e) {
+        return setColor(e.target.value);
+    });
+
     // Initialize pencil size slider events
     function setPencilSize(pxSize) {
-        pensizePreviewDot.style.transform = 'scale(' + (pxSize / 10) + ')';
-        ctx.lineWidth = pxSize/scale;
-        pensize.value=pxSize;
+        pensizePreviewDot.style.transform = 'scale(' + pxSize / 10 + ')';
+        ctx.lineWidth = pxSize / scale;
+        pensize.value = pxSize;
         localStorage.setItem('pensize', pxSize);
     }
-    pensize.addEventListener('input', e=>setPencilSize(e.target.value))
-    setPencilSize(parseInt(localStorage.getItem('pensize')) || DEFAULTSIZE)
+    pensize.addEventListener('input', function (e) {
+        return setPencilSize(e.target.value);
+    });
+    setPencilSize(parseInt(localStorage.getItem('pensize')) || DEFAULTSIZE);
     ctx.lineCap = 'round';
 
-    let mousePos = {
+    var mousePos = {
         x: 0,
         y: 0
-    }
-      , lastPos = mousePos;
+    },
+        lastPos = mousePos;
 
-    canvas.addEventListener("mousedown", function(e) {
+    canvas.addEventListener("mousedown", function (e) {
         mousePos = lastPos = getMousePos(e);
-        startDrawLoop()
+        startDrawLoop();
     }, false);
 
     document.addEventListener("mouseup", endDrawLoop, false);
 
-    canvas.addEventListener("mousemove", function(e) {
+    canvas.addEventListener("mousemove", function (e) {
         mousePos = getMousePos(e);
     }, false);
-    
 
     // Get the position of the mouse relative to the canvas
     function getMousePos(mouseEvent) {
@@ -117,18 +130,18 @@ function letUserDrawAndDownload(img) {
     }
 
     // Drawing loop is separated from the events
-    let frameRequest = null
-      , isDrawing = false;
+    var frameRequest = null,
+        isDrawing = false;
 
     function startDrawLoop() {
-        if(isDrawing) return
-        console.log('startDrawLoop')
+        if (isDrawing) return;
+        console.log('startDrawLoop');
         isDrawing = true;
         ctx.beginPath();
-        drawLoop()
+        drawLoop();
     }
     function endDrawLoop() {
-        console.log('endDrawLoop')
+        console.log('endDrawLoop');
         isDrawing = false;
         window.cancelAnimationFrame(frameRequest);
         frameRequest = null;
@@ -144,46 +157,47 @@ function letUserDrawAndDownload(img) {
         ctx.stroke();
         lastPos = mousePos;
     }
-    
+
     // Handle mobile events
     function proxyTouchToMouse(touchEventName, mouseEventName) {
-        canvas.addEventListener(touchEventName, function(e) {
-            e.preventDefault()
-            var {clientX,clientY} = e.touches[0] || {};
-            var mouseEvent = new MouseEvent(mouseEventName,{
-                clientX,
-                clientY
+        canvas.addEventListener(touchEventName, function (e) {
+            e.preventDefault();
+
+            var _ref = e.touches[0] || {},
+                clientX = _ref.clientX,
+                clientY = _ref.clientY;
+
+            var mouseEvent = new MouseEvent(mouseEventName, {
+                clientX: clientX,
+                clientY: clientY
             });
             canvas.dispatchEvent(mouseEvent);
         }, false);
     }
-    proxyTouchToMouse('touchstart', 'mousedown')
-    proxyTouchToMouse('touchend', 'mouseup')
-    proxyTouchToMouse('touchmove', 'mousemove')
+    proxyTouchToMouse('touchstart', 'mousedown');
+    proxyTouchToMouse('touchend', 'mouseup');
+    proxyTouchToMouse('touchmove', 'mousemove');
 
     // Download button
-    byId('download').addEventListener('click', downloadImage, false)
+    byId('download').addEventListener('click', downloadImage, false);
     function downloadImage(e) {
         var filename = (fileinput.value.split('\\').pop().split('.')[0] || 'image') + '-edited.png';
-        this.href = canvas.toDataURL('image/png', 0.5)
-        this.download = filename
+        this.href = canvas.toDataURL('image/png', 0.5);
+        this.download = filename;
     }
 
     // Tap the background to switch its color (usefull for transparent images)
-    var background = byId('background')
+    var background = byId('background');
     background.addEventListener('click', switchBackground);
-    var currentMode = localStorage.getItem('background') || 0
+    var currentMode = localStorage.getItem('background') || 0;
     function switchBackground() {
-        currentMode++
-        localStorage.setItem('background', currentMode)
-        applyBackground()
+        currentMode++;
+        localStorage.setItem('background', currentMode);
+        applyBackground();
     }
     function applyBackground() {
-        var options = ['#FFF', '#333']
-        background.style.backgroundColor = options[currentMode % options.length]
+        var options = ['#FFF', '#333'];
+        background.style.backgroundColor = options[currentMode % options.length];
     }
-    applyBackground()
-    
-
-
+    applyBackground();
 }

@@ -1,0 +1,33 @@
+{
+  "name": "minimage",
+  "version": "1.0.0",
+  "description": "Minimal image editor",
+  "main": "index.html",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.5.2",
+    "watch-less": "0.0.4"
+  },
+  "scripts": {
+    "transpile-js": "babel --watch src -d build",
+    "transpile-css": "watch-less -d src -r build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/renanlecaro/minimage.git"
+  },
+  "keywords": [
+    "canvas",
+    "image",
+    "mobile",
+    "responsive",
+    "minimal"
+  ],
+  "author": "Renan LE CARO",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/renanlecaro/minimage/issues"
+  },
+  "homepage": "https://github.com/renanlecaro/minimage#readme"
+}

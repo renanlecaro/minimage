@@ -8,9 +8,18 @@ How it works :
 - tap download to download
 - reload the page to start a new edit
 
-I got tired of having no default app on my phone to draw on images. So I made a very, very simple one. It's quick and dirty code, unminified, and it probably breaks on many browsers :) You dont need to install it so it doesn't take MB of your internal storage.
+I got tired of having no default app on my phone to draw on images. So I made a very, very simple one.
 
-Feel free to do PRs to make it work better on your setup. Just dont add buttons or libs. It would be nice to have it work offline, allow zooming in an elegant manner, etc ..
+Feel free to do PRs to make it work better on your setup. It would be nice to have it work offline (i tried but just managed to prevent refreshes)
+
+How to edit the code:
+# folder setup
+git pull
+npm i
+# run this and edit the source files in the src folder
+npm run transpile-css
+npm run transpile-js
+
 
 Credits :
 
@@ -23,17 +32,11 @@ https://stackoverflow.com/questions/16710302/html5-file-api-with-filename-path
 Download canvas as an image : 
 http://jsfiddle.net/wboykinm/fL0q2uce/
 
-Block zoom lol :
-https://css-tricks.com/snippets/html/responsive-meta-tag/
-
 Accept only images :
 https://www.w3schools.com/tags/att_input_accept.asp
 
 How to set the font stack to a not too dirty one 
 http://www.cssfontstack.com/Arial
 
-Service workers :
-https://github.com/jakearchibald/simple-serviceworker-tutorial/blob/gh-pages/index.html
-
-Pretty icons :
+Pretty icons when added to home screen:
 https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/

@@ -1,6 +1,8 @@
 # minimage
 Minimal html5 image editor : https://minimage.tk
 
+<img src="http://i.imgur.com/1G5qGOo.png">
+
 How it works :
 - tap anywhere to load a file
 - draw on it

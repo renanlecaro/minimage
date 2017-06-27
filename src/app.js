@@ -1,5 +1,12 @@
+/*
+Minimage, minimal image editor.
 
-// Global steps of the app 
+See the app in action here : https://minimage.tk
+
+This is a vanillaJS, barebone image editor. 
+It is meant to work on chrome for android and not much more. 
+
+*/
 document.addEventListener("DOMContentLoaded", function() {
     askForImage(file=>loadImage(file, image=>letUserDrawAndDownload(image)))
 })
@@ -8,14 +15,9 @@ const byId = document.getElementById.bind(document)
   , DEFAULTCOLOR = "#2b76ce"
   , DEFAULTSIZE = 20;
 
-// Setup of the welcome / pick an image UI
+// Setup of the welcome  UI
 function askForImage(callback) {
 
-    // Show the upload interface to the user
-    byId('inputForAFile').style.display = "";
-    drawAndDownload.style.display = "none";
-
-    // Listen for file changes
     let fileinput = byId('fileinput');
     fileinput.addEventListener('change', fileChanged)
     function fileChanged(changeEvent) {
@@ -46,7 +48,7 @@ function letUserDrawAndDownload(img) {
 
     const canvas = byId('drawzone')
 
-    // Switch to isDrawing mode
+    // Switch to drawing mode
     byId('inputForAFile').style.display = "none";
     byId('drawAndDownload').style.display = "";
 
@@ -56,7 +58,7 @@ function letUserDrawAndDownload(img) {
     canvas.width = img.width / imgScale;
     canvas.height = img.height / imgScale;
 
-    // Display the loaded file on the canvas
+    // Display the loaded image on the canvas
     let ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
@@ -69,12 +71,13 @@ function letUserDrawAndDownload(img) {
     measureScale()
     window.addEventListener('resize', measureScale);
 
-    // Initialize color picker events
+    
     const colorpicker = byId('colorpicker')
       , pensizePreview = byId('pensizePreview')
       , pensizePreviewDot = byId('pensizePreviewDot')
       , pensize = byId('pensize');
-
+    
+    // Sets draw color at load and when user clicks color input  
     function setColor(color) {
         pensizePreviewDot.style.background = ctx.strokeStyle = colorpicker.value = color
         localStorage.setItem('color', color);
@@ -82,7 +85,7 @@ function letUserDrawAndDownload(img) {
     setColor(localStorage.getItem('color') || DEFAULTCOLOR);
     colorpicker.addEventListener('input', e=>setColor(e.target.value))
     
-    // Initialize pencil size slider events
+    // Sets draw size at load and when the user interracts with the slider
     function setPencilSize(pxSize) {
         pensizePreviewDot.style.transform = 'scale(' + (pxSize / 10) + ')';
         ctx.lineWidth = pxSize/scale;
@@ -91,8 +94,12 @@ function letUserDrawAndDownload(img) {
     }
     pensize.addEventListener('input', e=>setPencilSize(e.target.value))
     setPencilSize(parseInt(localStorage.getItem('pensize')) || DEFAULTSIZE)
+    
+    // To make the lines look slightly nicer
     ctx.lineCap = 'round';
 
+    // We cache the mouse position and previous mouse position. 
+    // Theay are defined by touch events, and used by the draw loop
     let mousePos = {
         x: 0,
         y: 0
@@ -120,26 +127,23 @@ function letUserDrawAndDownload(img) {
     }
 
     // Drawing loop is separated from the events
-    let frameRequest = null
-      , isDrawing = false;
+    let isDrawing = false;
 
     function startDrawLoop() {
         if(isDrawing) return
-        console.log('startDrawLoop')
         isDrawing = true;
         ctx.beginPath();
         drawLoop()
     }
     function endDrawLoop() {
-        console.log('endDrawLoop')
         isDrawing = false;
-        window.cancelAnimationFrame(frameRequest);
-        frameRequest = null;
     }
 
     function drawLoop() {
-        frameRequest = window.requestAnimationFrame(drawLoop);
-        renderCanvas();
+        if(isDrawing){
+            window.requestAnimationFrame(drawLoop);
+            renderCanvas();
+        }
     }
     function renderCanvas() {
         ctx.moveTo(lastPos.x, lastPos.y);
@@ -148,7 +152,7 @@ function letUserDrawAndDownload(img) {
         lastPos = mousePos;
     }
     
-    // Handle mobile events
+    // Proxy mobile events to their mouse counterpart
     function proxyTouchToMouse(touchEventName, mouseEventName) {
         canvas.addEventListener(touchEventName, function(e) {
             e.preventDefault()
@@ -174,8 +178,6 @@ function letUserDrawAndDownload(img) {
 
     // Tap the background to switch its color (usefull for transparent images)
     let background = byId('background')
-    background.addEventListener('click', switchBackground);
-    let currentMode = localStorage.getItem('background') || 0
     function switchBackground() {
         currentMode++
         localStorage.setItem('background', currentMode)
@@ -185,8 +187,9 @@ function letUserDrawAndDownload(img) {
         let options = ['#FFF', '#333']
         background.style.backgroundColor = options[currentMode % options.length]
     }
+    let currentMode = localStorage.getItem('background') || 0
     applyBackground()
-    
+    background.addEventListener('click', switchBackground);
 
 }
 

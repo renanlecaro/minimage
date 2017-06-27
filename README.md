@@ -12,13 +12,19 @@ I got tired of having no default app on my phone to draw on images. So I made a 
 
 Feel free to do PRs to make it work better on your setup. It would be nice to have it work offline (i tried but just managed to prevent refreshes)
 
-How to edit the code:
-# folder setup
-git pull
-npm i
-# run this and edit the source files in the src folder
-npm run transpile-css
-npm run transpile-js
+How to install
+
+- git pull
+- npm i
+
+How to run locally (will transpile source to usable js and css)
+- npm run transpile-css
+- npm run transpile-js
+
+How to build 
+- npm run transpile-js-compress
+- git push 
+
 
 
 Credits :

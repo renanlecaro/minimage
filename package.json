@@ -24,19 +24,13 @@
   "scripts": {
     "start": "rm -rf dist && NODE_ENV=development  webpack-dev-server",
     "build": "rm -rf build && webpack -p",
-    "publish":"./publish.sh"
+    "publish": "./publish.sh"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/renanlecaro/minimage.git"
   },
-  "keywords": [
-    "canvas",
-    "image",
-    "mobile",
-    "responsive",
-    "minimal"
-  ],
+  "keywords": ["canvas", "image", "mobile", "responsive", "minimal"],
   "author": "Renan LE CARO",
   "license": "ISC",
   "bugs": {

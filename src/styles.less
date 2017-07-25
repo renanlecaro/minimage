@@ -4,7 +4,6 @@ body {
   padding: 0;
 }
 
-
 @blue: #0078ff;
 
 .button {
@@ -66,7 +65,6 @@ canvas#drawzone {
   box-sizing: border-box;
 }
 div#drawAndDownload {
-
   user-select: none;
   top: 0;
   display: block;
@@ -75,12 +73,13 @@ div#drawAndDownload {
   left: 0;
   right: 0;
 }
-#drawzoneWrapper{
+#drawzoneWrapper {
   position: absolute;
   width: 100%;
   height: 100%;
 
-  img,canvas{
+  img,
+  canvas {
     position: absolute;
     max-width: 100%;
     max-height: 100%;
@@ -96,7 +95,7 @@ div#drawAndDownload {
     left: 0;
     right: 0;
   }
-  img{
+  img {
     z-index: 2;
   }
   canvas {
@@ -167,9 +166,9 @@ ul.tip {
       right: 0;
       bottom: 0;
       margin: auto;
-      &.eraser{
-        background:url(/images/eraser.svg);
-        background-repeat:no-repeat ;
+      &.eraser {
+        background: url(/images/eraser.svg);
+        background-repeat: no-repeat;
       }
     }
   }
@@ -179,7 +178,6 @@ ul.tip {
     text-transform: uppercase;
     font-size: 80%;
   }
-
 }
 div#background {
   background: white;
@@ -190,7 +188,7 @@ div#background {
   bottom: 0;
   transition: background-color 0.2s;
 }
-.modal{
+.modal {
   z-index: 4;
   position: fixed;
   top: 0px;
@@ -201,28 +199,27 @@ div#background {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
-  button{
-    width:33%;
-    border:none;
-    flex-grow:1;
+  button {
+    width: 33%;
+    border: none;
+    flex-grow: 1;
     &.active {
       transform: scale(1.1);
       box-shadow: 0 0 20px black;
-
     }
-    img{
+    img {
       width: 1.5em;
       position: relative;
       top: 5px;
       margin-right: 5px;
     }
   }
-  animation: zoomIn 0.2s ;
+  animation: zoomIn 0.2s;
 }
 
-@keyframes zoomIn{
-  0%{
-    opacity:0;
-    transform:scale(0.5)
+@keyframes zoomIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
   }
 }

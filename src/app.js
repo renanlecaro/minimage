@@ -25,18 +25,18 @@ document.body.addEventListener("drop", function(ev) {
 
 function handleDataTransferItems(items) {
   // Tries to paste an image
-  let file = [].find.call(
+   let imageFile = Array.prototype.find.call(
     items,
     e => e.kind == "file" && e.type.match("image")
   );
   originalFileName = "pasted-image";
-  if (file) {
+  if (imageFile) {
     console.log("parsing pasted image content");
-    loadFile(file.getAsFile());
+    loadFile(imageFile.getAsFile());
     return;
   }
   // Tries to load a remote image given its adress
-  let url = [].find.call(items, e => e.kind == "string");
+  let url = Array.prototype.find.call(items, e => e.kind == "string");
   if (url) {
     console.log("parsing url content");
     url.getAsString(s => createImageWithFileContent(s));
@@ -98,6 +98,7 @@ function letUserDrawAndDownload(img) {
   // Display the loaded image on the canvas
   let ctx = canvas.getContext("2d");
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
 
   // We cache some zoom related data to avoid getting them all the time
   let scale, rect;

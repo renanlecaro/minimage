@@ -3,7 +3,8 @@
 See the app in action here : https://minimage.tk
 
 */
-import "./styles.less";
+// Avoids having to use the 80kb polyfills
+if(false){import "./styles.less";}
 
 document.addEventListener("DOMContentLoaded", function () {
   askForImage();
@@ -23,17 +24,20 @@ document.body.addEventListener("drop", function (ev) {
   handleDataTransferItems(ev.dataTransfer.items);
 });
 
+function find(list, test) {
+  for(var i=0;i<list.length;i++) if(test(list[i])) return list[i]
+}
 function handleDataTransferItems(items) {
   // Tries to paste an image
-  let file = [].find.call(items, e => e.kind == "file" && e.type.match("image"));
+  let imageFile = find(items, e => e.kind == "file" && e.type.match("image"));
   originalFileName = "pasted-image";
-  if (file) {
+  if (imageFile) {
     console.log("parsing pasted image content");
-    loadFile(file.getAsFile());
+    loadFile(imageFile.getAsFile());
     return;
   }
   // Tries to load a remote image given its adress
-  let url = [].find.call(items, e => e.kind == "string");
+  let url = find(items, e => e.kind == "string");
   if (url) {
     console.log("parsing url content");
     url.getAsString(s => createImageWithFileContent(s));

@@ -84,6 +84,7 @@ canvas#drawzone {
   box-sizing: border-box;
 }
 div#drawAndDownload {
+  user-select: none;
   top: 0;
   display: block;
   position: absolute;

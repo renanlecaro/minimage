@@ -118,6 +118,10 @@ function letUserDrawAndDownload(img) {
   let currentColor = '';
   // Sets draw color at load and when user clicks color input
   function setColor(color) {
+
+
+
+
     currentColor = color;
     if (color == 'eraser') {
       ctx.globalCompositeOperation = 'destination-out';
@@ -141,12 +145,16 @@ function letUserDrawAndDownload(img) {
       );
   }
   setColor(localStorage.getItem('color') || DEFAULTCOLOR);
+
   pensizePreview.addEventListener('click', () =>
     openColorPicker(currentColor, setColor)
   );
 
   // Sets draw size at load and stylewhen the user interracts with the slider
   function setPencilSize(pxSize) {
+
+
+
     pensizePreviewDot.style.transform = 'scale(' + pxSize / 10 + ')';
     ctx.lineWidth = pxSize / scale;
     pensize.value = pxSize;
@@ -205,6 +213,7 @@ function letUserDrawAndDownload(img) {
   }
   function endDrawLoop() {
     isDrawing = false;
+
   }
 
   function drawLoop() {
@@ -214,6 +223,7 @@ function letUserDrawAndDownload(img) {
     }
   }
   function renderCanvas() {
+    console.log('rendering')
     ctx.moveTo(lastPos.x, lastPos.y);
     ctx.lineTo(mousePos.x, mousePos.y);
     ctx.stroke();
@@ -221,7 +231,7 @@ function letUserDrawAndDownload(img) {
   }
 
   // Proxy mobile events to their mouse counterpart
-  function proxyTouchToMouse(touchEventName, mouseEventName) {
+  function proxyTouchToMouse(touchEventName, mouseEventName, eventTarget=canvas) {
     canvas.addEventListener(
       touchEventName,
       function(e) {
@@ -231,13 +241,13 @@ function letUserDrawAndDownload(img) {
           clientX,
           clientY
         });
-        canvas.dispatchEvent(mouseEvent);
+        eventTarget.dispatchEvent(mouseEvent);
       },
       false
     );
   }
   proxyTouchToMouse('touchstart', 'mousedown');
-  proxyTouchToMouse('touchend', 'mouseup');
+  proxyTouchToMouse('touchend', 'mouseup', document);
   proxyTouchToMouse('touchmove', 'mousemove');
 
   // Download button

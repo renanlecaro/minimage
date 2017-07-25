@@ -3,21 +3,21 @@
 See the app in action here : https://minimage.tk
 
 */
-import "./styles.less"
+import './styles.less';
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener('DOMContentLoaded', function() {
   askForImage();
 });
 
-window.addEventListener("paste", function(ev) {
+window.addEventListener('paste', function(ev) {
   handleDataTransferItems(ev.clipboardData.items);
 });
 
-document.body.addEventListener("dragover", function(ev) {
+document.body.addEventListener('dragover', function(ev) {
   ev.preventDefault();
   ev.stopPropagation();
 });
-document.body.addEventListener("drop", function(ev) {
+document.body.addEventListener('drop', function(ev) {
   ev.preventDefault();
   ev.stopPropagation();
   handleDataTransferItems(ev.dataTransfer.items);
@@ -25,47 +25,47 @@ document.body.addEventListener("drop", function(ev) {
 
 function handleDataTransferItems(items) {
   // Tries to paste an image
-   let imageFile = Array.prototype.find.call(
+  let imageFile = Array.prototype.find.call(
     items,
-    e => e.kind == "file" && e.type.match("image")
+    e => e.kind == 'file' && e.type.match('image')
   );
-  originalFileName = "pasted-image";
+  originalFileName = 'pasted-image';
   if (imageFile) {
-    console.log("parsing pasted image content");
+    console.log('parsing pasted image content');
     loadFile(imageFile.getAsFile());
     return;
   }
   // Tries to load a remote image given its adress
-  let url = Array.prototype.find.call(items, e => e.kind == "string");
+  let url = Array.prototype.find.call(items, e => e.kind == 'string');
   if (url) {
-    console.log("parsing url content");
+    console.log('parsing url content');
     url.getAsString(s => createImageWithFileContent(s));
   }
 }
 
 const byId = document.getElementById.bind(document),
-  DEFAULTCOLOR = "#2b76ce",
+  DEFAULTCOLOR = '#2b76ce',
   DEFAULTSIZE = 20;
 
-var originalFileName = "pasted-image";
+var originalFileName = 'pasted-image';
 let askingForImage = true;
 // Setup of the welcome  UI
 function askForImage() {
-  let fileinput = byId("fileinput");
-  fileinput.addEventListener("change", fileChanged);
+  let fileinput = byId('fileinput');
+  fileinput.addEventListener('change', fileChanged);
   function fileChanged(changeEvent) {
-    fileinput.removeEventListener("change", fileChanged);
+    fileinput.removeEventListener('change', fileChanged);
     // go to next step
 
     originalFileName =
-      fileinput.value.split("\\").pop().split(".")[0] || "image";
+      fileinput.value.split('\\').pop().split('.')[0] || 'image';
     loadFile(changeEvent.target.files[0]);
   }
 }
 
 // Transforms the file input content to a real image
 function loadFile(fileToLoad) {
-  byId("readme").innerHTML = "<h1>Loading ...</h1>";
+  byId('readme').innerHTML = '<h1>Loading ...</h1>';
 
   let fileReader = new FileReader();
   fileReader.onload = () => createImageWithFileContent(fileReader.result);
@@ -73,32 +73,34 @@ function loadFile(fileToLoad) {
 }
 
 function createImageWithFileContent(result) {
-  console.log("trying to load file as image");
+  console.log('trying to load file as image');
   if (!askingForImage) return;
   let img = new Image();
   img.onload = () => letUserDrawAndDownload(img);
   img.src = result;
 }
+
+let OrginalImage;
 // Lets the user draw on the loaded image
 function letUserDrawAndDownload(img) {
   askingForImage = false;
-  const canvas = byId("drawzone");
-
+  OrginalImage = img;
+  const canvas = byId('drawzone'),
+    drawzoneWrapper = byId('drawzoneWrapper');
+  drawzoneWrapper.appendChild(img);
   // Switch to drawing mode
-  byId("inputForAFile").style.display = "none";
-  byId("drawAndDownload").style.display = "";
+  byId('inputForAFile').style.display = 'none';
+  byId('drawAndDownload').style.display = '';
 
   // Fits the canvas to screen
   let maxRes = Math.max(window.innerHeight, window.innerWidth);
   let imgScale = Math.max(img.width / maxRes, img.height / maxRes, 1);
-  canvas.width = img.width / imgScale;
-  canvas.height = img.height / imgScale;
-
+  img.style.maxWidth = canvas.width = img.width / imgScale;
+  img.style.maxHeight = canvas.height = img.height / imgScale;
 
   // Display the loaded image on the canvas
-  let ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
+  let ctx = canvas.getContext('2d');
+  // ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
   // We cache some zoom related data to avoid getting them all the time
   let scale, rect;
@@ -107,43 +109,54 @@ function letUserDrawAndDownload(img) {
     scale = rect.width / canvas.width;
   }
   measureScale();
-  window.addEventListener("resize", measureScale);
+  window.addEventListener('resize', measureScale);
 
-  const colorpicker = byId("colorpicker"),
-    pensizePreview = byId("pensizePreview"),
-    pensizePreviewDot = byId("pensizePreviewDot"),
-    pensize = byId("pensize");
+  const pensizePreview = byId('pensizePreview'),
+    pensizePreviewDot = byId('pensizePreviewDot'),
+    pensize = byId('pensize');
 
+  let currentColor = '';
   // Sets draw color at load and when user clicks color input
   function setColor(color) {
-    pensizePreviewDot.style.background = ctx.strokeStyle = colorpicker.value = color;
-    localStorage.setItem("color", color);
-    refreshColorPreviewBorder();
+    currentColor = color;
+    if (color == 'eraser') {
+      ctx.globalCompositeOperation = 'destination-out';
+      pensizePreviewDot.style.background = '';
+      pensizePreviewDot.classList.add('eraser');
+    } else {
+      pensizePreviewDot.classList.remove('eraser');
+      ctx.globalCompositeOperation = 'source-over';
+      pensizePreviewDot.style.background = ctx.strokeStyle = color;
+      localStorage.setItem('color', color);
+      refreshColorPreviewBorder();
+    }
   }
   function refreshColorPreviewBorder() {
-    let pensizePreviewDot = byId("pensizePreviewDot");
+    let pensizePreviewDot = byId('pensizePreviewDot');
     pensizePreviewDot.style.border =
-      "1px solid " +
+      '1px solid ' +
       borderColor(
         pensizePreviewDot.style.backgroundColor,
-        byId("background").style.backgroundColor
+        byId('background').style.backgroundColor
       );
   }
-  setColor(localStorage.getItem("color") || DEFAULTCOLOR);
-  colorpicker.addEventListener("input", e => setColor(e.target.value));
+  setColor(localStorage.getItem('color') || DEFAULTCOLOR);
+  pensizePreview.addEventListener('click', () =>
+    openColorPicker(currentColor, setColor)
+  );
 
   // Sets draw size at load and stylewhen the user interracts with the slider
   function setPencilSize(pxSize) {
-    pensizePreviewDot.style.transform = "scale(" + pxSize / 10 + ")";
+    pensizePreviewDot.style.transform = 'scale(' + pxSize / 10 + ')';
     ctx.lineWidth = pxSize / scale;
     pensize.value = pxSize;
-    localStorage.setItem("pensize", pxSize);
+    localStorage.setItem('pensize', pxSize);
   }
-  pensize.addEventListener("input", e => setPencilSize(e.target.value));
-  setPencilSize(parseInt(localStorage.getItem("pensize")) || DEFAULTSIZE);
+  pensize.addEventListener('input', e => setPencilSize(e.target.value));
+  setPencilSize(parseInt(localStorage.getItem('pensize')) || DEFAULTSIZE);
 
   // To make the lines look slightly nicer
-  ctx.lineCap = "round";
+  ctx.lineCap = 'round';
 
   // We cache the mouse position and previous mouse position.
   // Theay are defined by touch events, and used by the draw loop
@@ -154,7 +167,7 @@ function letUserDrawAndDownload(img) {
     lastPos = mousePos;
 
   canvas.addEventListener(
-    "mousedown",
+    'mousedown',
     function(e) {
       mousePos = lastPos = getMousePos(e);
       startDrawLoop();
@@ -162,10 +175,10 @@ function letUserDrawAndDownload(img) {
     false
   );
 
-  document.addEventListener("mouseup", endDrawLoop, false);
+  document.addEventListener('mouseup', endDrawLoop, false);
 
   canvas.addEventListener(
-    "mousemove",
+    'mousemove',
     function(e) {
       mousePos = getMousePos(e);
     },
@@ -223,41 +236,44 @@ function letUserDrawAndDownload(img) {
       false
     );
   }
-  proxyTouchToMouse("touchstart", "mousedown");
-  proxyTouchToMouse("touchend", "mouseup");
-  proxyTouchToMouse("touchmove", "mousemove");
+  proxyTouchToMouse('touchstart', 'mousedown');
+  proxyTouchToMouse('touchend', 'mouseup');
+  proxyTouchToMouse('touchmove', 'mousemove');
 
   // Download button
   var downloadCounter = 0;
-  byId("download").addEventListener("click", downloadImage, false);
+  byId('download').addEventListener('click', downloadImage, false);
   function downloadImage(e) {
-    let filename = originalFileName + "-minimage-" + downloadCounter + ".png";
-    this.href = canvas.toDataURL("image/png", 0.5);
+    let filename = originalFileName + '-minimage-' + downloadCounter + '.png';
+    this.href = mergeCanvasAndImage(canvas, OrginalImage).toDataURL(
+      'image/png',
+      0.5
+    );
     this.download = filename;
     downloadCounter++;
   }
 
   // Tap the background to switch its color (usefull for transparent images)
-  let background = byId("background");
+  let background = byId('background');
   function switchBackground() {
     currentMode++;
-    localStorage.setItem("background", currentMode);
+    localStorage.setItem('background', currentMode);
     applyBackground();
   }
   function applyBackground() {
-    let options = ["#FFF", "#333"];
+    let options = ['#FFF', '#333'];
     background.style.backgroundColor = options[currentMode % options.length];
     refreshColorPreviewBorder();
   }
-  let currentMode = localStorage.getItem("background") || 0;
+  let currentMode = localStorage.getItem('background') || 0;
   applyBackground();
-  background.addEventListener("click", switchBackground);
+  background.addEventListener('click', switchBackground);
 }
 
 function colorToRGBA(color) {
-  var canvas = document.createElement("canvas");
+  var canvas = document.createElement('canvas');
   canvas.width = canvas.height = 1;
-  var ctx = canvas.getContext("2d");
+  var ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, 1, 1);
   ctx.fillStyle = color;
   ctx.fillRect(0, 0, 1, 1);
@@ -265,12 +281,59 @@ function colorToRGBA(color) {
 }
 function luminance(color) {
   return colorToRGBA(color).slice(0, 3).reduce((a, b) => a + b, 0) / 3;
+  pickColor;
 }
 
 function borderColor(foreground, background) {
   let bgL = luminance(background);
   let fgL = luminance(foreground);
-  if (bgL > 125 && fgL > 200) return "black";
-  if (bgL < 125 && fgL < 25) return "white";
-  return "transparent";
+  if (bgL > 125 && fgL > 200) return 'black';
+  if (bgL < 125 && fgL < 25) return 'white';
+  return 'transparent';
+}
+
+let paletteColors = '#000000,#FFFFFF,#F44336,#E91E63,#9C27B0,#673AB7,#3F51B5,#2196F3,#03A9F4,#00BCD4,#009688,#4CAF50,#8BC34A,#CDDC39,#FFEB3B,#FFC107,#FF9800,#FF5722,#795548,#9E9E9E,#607D8B'.split(
+  ','
+);
+
+function openColorPicker(currentColor, callback) {
+  let modal = document.createElement('div');
+  modal.classList.add('modal');
+  document.body.appendChild(modal);
+
+  function pickColor(color) {
+    closeModal();
+    callback(color);
+  }
+
+  paletteColors.forEach(color => {
+    let button = document.createElement('button');
+    button.classList.add('colorbutton');
+    if (color === currentColor) button.classList.add('active');
+    button.style.backgroundColor = color.toLowerCase();
+    button.addEventListener('click', () => pickColor(color));
+    modal.appendChild(button);
+  });
+
+  let eraser = document.createElement('button');
+  eraser.classList.add('eraser');
+  eraser.addEventListener('click', () => pickColor('eraser'));
+  eraser.innerHTML = '<img src="/images/eraser.svg"/>Eraser (reveals photo)';
+  modal.appendChild(eraser);
+
+  function closeModal() {
+    document.body.removeChild(modal);
+  }
+}
+
+function mergeCanvasAndImage(canvas, img) {
+  let clone = document.createElement('canvas');
+  clone.width = canvas.width;
+  clone.height = canvas.height;
+  var ctx = clone.getContext('2d');
+  // Draw the orignal image
+  ctx.drawImage(img, 0, 0, clone.width, clone.height);
+  // And then the user's mess on top
+  ctx.drawImage(canvas, 0, 0);
+  return clone;
 }

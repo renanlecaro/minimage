@@ -92,16 +92,32 @@ div#drawAndDownload {
   left: 0;
   right: 0;
 }
-canvas#drawzone {
+#drawzoneWrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+#drawzoneWrapper img,
+#drawzoneWrapper canvas {
   position: absolute;
   max-width: 100%;
   max-height: 100%;
   margin: auto;
-  z-index: 2;
   box-shadow: 0 0 70px rgba(0, 0, 0, 0.5);
   border-radius: 2px;
   width: auto;
   height: auto;
+  display: block;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+#drawzoneWrapper img {
+  z-index: 2;
+}
+#drawzoneWrapper canvas {
+  z-index: 3;
   cursor: default;
 }
 #fileinput {
@@ -147,14 +163,25 @@ ul.tip li {
   margin: 0;
 }
 #topbar #pensizePreview {
-  width: 40px;
+  width: 12px;
   font-size: 20px;
   position: relative;
+  margin-right: 20px;
 }
-#topbar #download {
-  width: 100px;
-  text-transform: uppercase;
-  font-size: 80%;
+#topbar #pensizePreview #pensizePreviewDot {
+  border-radius: 50%;
+  height: 10px;
+  pickColorwidth: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+#topbar #pensizePreview #pensizePreviewDot.eraser {
+  background: url(/images/eraser.svg);
+  background-repeat: no-repeat;
 }
 #topbar #download {
   position: relative;
@@ -173,6 +200,9 @@ ul.tip li {
   border-radius: 3px;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.28);
   margin: 5px 0;
+  width: 100px;
+  text-transform: uppercase;
+  font-size: 80%;
 }
 #topbar #download:focus,
 #topbar #download:hover {
@@ -183,17 +213,6 @@ ul.tip li {
   box-shadow: 0 0 0 #004899;
   background: #004899;
 }
-#topbar #pensizePreviewDot {
-  border-radius: 50%;
-  height: 10px;
-  width: 10px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-}
 div#background {
   background: white;
   position: fixed;
@@ -202,4 +221,38 @@ div#background {
   right: 0;
   bottom: 0;
   transition: background-color 0.2s;
+}
+.modal {
+  z-index: 4;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.73);
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  animation: zoomIn 0.2s ;
+}
+.modal button {
+  width: 33%;
+  border: none;
+  flex-grow: 1;
+}
+.modal button.active {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px black;
+}
+.modal button img {
+  width: 1.5em;
+  position: relative;
+  top: 5px;
+  margin-right: 5px;
+}
+@keyframes zoomIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
 }

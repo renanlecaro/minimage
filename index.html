@@ -24,12 +24,13 @@
         </div>
         <div id="drawAndDownload" style="display:none;">
             <div id="background"></div>
-            <canvas id="drawzone"></canvas>
+            <div id="drawzoneWrapper">
+              <canvas id="drawzone"></canvas>
+            </div>
             <div id="topbar">
-                <input type="color" id="colorpicker"/>
-                <label id="pensizePreview" for="colorpicker">
+                <div id="pensizePreview" >
                     <div id="pensizePreviewDot"></div>
-                </label>
+                </div>
                 <input type="range" id="pensize" min="2" max="40"/>
                 <a id="download">Download</a>
             </div>

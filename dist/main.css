@@ -8,15 +8,25 @@ body {
   color: white;
   background: #0078ff;
   font-weight: bold;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  align-self: stretch;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-item-align: stretch;
+      align-self: stretch;
   text-decoration: none;
   cursor: pointer;
-  transform: translate(0, -2px);
+  -webkit-transform: translate(0, -2px);
+          transform: translate(0, -2px);
   box-shadow: 0 3px 0 #004899;
+  transition: box-shadow 0.2s, -webkit-transform 0.2s;
   transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, -webkit-transform 0.2s;
   border-radius: 3px;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.28);
   margin: 5px 0;
@@ -26,7 +36,8 @@ body {
   background: #0060cc;
 }
 .button:active {
-  transform: none;
+  -webkit-transform: none;
+          transform: none;
   box-shadow: 0 0 0 #004899;
   background: #004899;
 }
@@ -34,9 +45,16 @@ body {
   max-width: 400px;
   padding: 1rem;
   color: #666;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   min-height: 100%;
   padding: 10px;
   box-sizing: border-box;
@@ -50,15 +68,25 @@ body {
   color: white;
   background: #0078ff;
   font-weight: bold;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  align-self: stretch;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-item-align: stretch;
+      align-self: stretch;
   text-decoration: none;
   cursor: pointer;
-  transform: translate(0, -2px);
+  -webkit-transform: translate(0, -2px);
+          transform: translate(0, -2px);
   box-shadow: 0 3px 0 #004899;
+  transition: box-shadow 0.2s, -webkit-transform 0.2s;
   transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, -webkit-transform 0.2s;
   border-radius: 3px;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.28);
   margin: 5px 0;
@@ -69,7 +97,8 @@ body {
   background: #0060cc;
 }
 #readme .fileInputWrapper:active {
-  transform: none;
+  -webkit-transform: none;
+          transform: none;
   box-shadow: 0 0 0 #004899;
   background: #004899;
 }
@@ -130,9 +159,15 @@ ul.tip li {
   right: 0;
   height: 40px;
   padding: 2px 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   z-index: 3;
 }
 #topbar input#colorpicker {
@@ -160,15 +195,25 @@ ul.tip li {
   color: white;
   background: #0078ff;
   font-weight: bold;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  align-self: stretch;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-item-align: stretch;
+      align-self: stretch;
   text-decoration: none;
   cursor: pointer;
-  transform: translate(0, -2px);
+  -webkit-transform: translate(0, -2px);
+          transform: translate(0, -2px);
   box-shadow: 0 3px 0 #004899;
+  transition: box-shadow 0.2s, -webkit-transform 0.2s;
   transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, -webkit-transform 0.2s;
   border-radius: 3px;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.28);
   margin: 5px 0;
@@ -178,7 +223,8 @@ ul.tip li {
   background: #0060cc;
 }
 #topbar #download:active {
-  transform: none;
+  -webkit-transform: none;
+          transform: none;
   box-shadow: 0 0 0 #004899;
   background: #004899;
 }
@@ -202,3 +248,5 @@ div#background {
   bottom: 0;
   transition: background-color 0.2s;
 }
+
+/*# sourceMappingURL=main.css.map*/

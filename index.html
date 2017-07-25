@@ -5,9 +5,10 @@
         <title>Minimage : minimal image editor</title>
         <meta name="description" content="Free web app to draw on your images. Works on mobile. No watermark."/>
         <link rel="manifest" href="./manifest.json">
-        <link rel="stylesheet" href="./build/styles.less.css">
+        <link rel="stylesheet" href="/dist/main.css">
     </head>
     <body>
+        <noscript><h1>This app requires javascript to be enabled, sorry.</h1></noscript>
         <div id="inputForAFile">
           <div id="readme">
             <img src="./images/logo-min.svg" width="642.487" height="128.368"/>
@@ -33,7 +34,7 @@
                 <a id="download">Download</a>
             </div>
         </div>
-        <script src="./build/app.js">
+        <script src="./dist/bundle.js"></script>
         </script>
     </body>
 </html>

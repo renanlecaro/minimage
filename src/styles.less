@@ -4,10 +4,36 @@ body {
     padding: 0;
 }
 
+@blue:#0078ff;
+.button{
+  position: relative;
+  color: white;
+  background: @blue;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self:stretch;
+  text-decoration: none;
+  cursor: pointer;
+  transform:translate(0,-2px);
+  box-shadow: 0 3px 0 darken(@blue, 20%);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 3px;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.28);
+  margin:5px 0;
+  &:focus,
+  &:hover {
+    background: darken(@blue, 10%);
+  }
 
-
+  &:active{
+    transform:none;
+    box-shadow: 0 0 0 darken(@blue, 20%);
+      background: darken(@blue, 20%)
+  }
+}
 #readme {
-    pointer-events: none;
     max-width: 400px;
     padding: 1rem;
     color: #666;
@@ -20,6 +46,11 @@ body {
     margin:0 auto;
     img {
         width: 100%;
+    }
+    .fileInputWrapper{
+      .button;
+        padding: 20px;
+
     }
 }
 
@@ -70,9 +101,12 @@ h1 {
     padding: 20px;
 }
 
-.tip {
+ul.tip {
     color: #666;
     font-style: italic;
+    li{
+      margin: 5px 0 ;
+    }
 }
 
 #topbar {
@@ -81,7 +115,7 @@ h1 {
     left: 0;
     right: 0;
     height: 40px;
-    background: rgb(255, 255, 255);
+
     padding: 2px 5px;
     display: flex;
     justify-content: center;
@@ -92,7 +126,7 @@ h1 {
 
     input#colorpicker {
         width: 0;
-        height: 0; 
+        height: 0;
         background: white;
         border: none;
         outline: none;
@@ -107,20 +141,11 @@ h1 {
     }
     #download{
         width:100px;
-        color: #242424;
-        text-transform: uppercase;
-        font-weight: bold;
-        font-size: 80%;
+      text-transform: uppercase;
+      font-size: 80%;
     }
-    #pensizePreview ,
     #download {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        align-self:stretch;
-        text-decoration: none;
-        cursor: pointer;
-        /* line-height: 0; */
+      .button;
     }
 
     #pensizePreviewDot {
@@ -135,18 +160,6 @@ h1 {
         margin: auto;
     }
 
-    #download:focus,
-     #download:hover,
-     #pensizePreview:focus,
-     #pensizePreview:hover {
-        background: rgba(0, 0, 0, 0.15);
-    }
-
-     #download:active,
-     #pensizePreview:active{
-         color:white;
-         background:#333;
-     }
 }
 div#background {
     background:white;

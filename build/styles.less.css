@@ -3,8 +3,34 @@ body {
   margin: 0;
   padding: 0;
 }
+.button {
+  position: relative;
+  color: white;
+  background: #0078ff;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+  text-decoration: none;
+  cursor: pointer;
+  transform: translate(0, -2px);
+  box-shadow: 0 3px 0 #004899;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 3px;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.28);
+  margin: 5px 0;
+}
+.button:focus,
+.button:hover {
+  background: #0060cc;
+}
+.button:active {
+  transform: none;
+  box-shadow: 0 0 0 #004899;
+  background: #004899;
+}
 #readme {
-  pointer-events: none;
   max-width: 400px;
   padding: 1rem;
   color: #666;
@@ -18,6 +44,34 @@ body {
 }
 #readme img {
   width: 100%;
+}
+#readme .fileInputWrapper {
+  position: relative;
+  color: white;
+  background: #0078ff;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+  text-decoration: none;
+  cursor: pointer;
+  transform: translate(0, -2px);
+  box-shadow: 0 3px 0 #004899;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 3px;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.28);
+  margin: 5px 0;
+  padding: 20px;
+}
+#readme .fileInputWrapper:focus,
+#readme .fileInputWrapper:hover {
+  background: #0060cc;
+}
+#readme .fileInputWrapper:active {
+  transform: none;
+  box-shadow: 0 0 0 #004899;
+  background: #004899;
 }
 #inputForAFile,
 #fileinput,
@@ -61,9 +115,12 @@ h1 {
   border-radius: 20px;
   padding: 20px;
 }
-.tip {
+ul.tip {
   color: #666;
   font-style: italic;
+}
+ul.tip li {
+  margin: 5px 0 ;
 }
 #topbar {
   position: fixed;
@@ -71,7 +128,6 @@ h1 {
   left: 0;
   right: 0;
   height: 40px;
-  background: #ffffff;
   padding: 2px 5px;
   display: flex;
   justify-content: center;
@@ -95,20 +151,35 @@ h1 {
 }
 #topbar #download {
   width: 100px;
-  color: #242424;
   text-transform: uppercase;
-  font-weight: bold;
   font-size: 80%;
 }
-#topbar #pensizePreview,
 #topbar #download {
+  position: relative;
+  color: white;
+  background: #0078ff;
+  font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
   align-self: stretch;
   text-decoration: none;
   cursor: pointer;
-  /* line-height: 0; */
+  transform: translate(0, -2px);
+  box-shadow: 0 3px 0 #004899;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 3px;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.28);
+  margin: 5px 0;
+}
+#topbar #download:focus,
+#topbar #download:hover {
+  background: #0060cc;
+}
+#topbar #download:active {
+  transform: none;
+  box-shadow: 0 0 0 #004899;
+  background: #004899;
 }
 #topbar #pensizePreviewDot {
   border-radius: 50%;
@@ -120,17 +191,6 @@ h1 {
   right: 0;
   bottom: 0;
   margin: auto;
-}
-#topbar #download:focus,
-#topbar #download:hover,
-#topbar #pensizePreview:focus,
-#topbar #pensizePreview:hover {
-  background: rgba(0, 0, 0, 0.15);
-}
-#topbar #download:active,
-#topbar #pensizePreview:active {
-  color: white;
-  background: #333;
 }
 div#background {
   background: white;

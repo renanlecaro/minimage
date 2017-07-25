@@ -3,49 +3,86 @@ Minimage, minimal image editor.
 
 See the app in action here : https://minimage.tk
 
-This is a vanillaJS, barebone image editor. 
-It is meant to work on chrome for android and not much more. 
+This is a vanillaJS, barebone image editor.
+It is meant to work on chrome for android and not much more.
 
 */
 document.addEventListener("DOMContentLoaded", function() {
-    askForImage(file=>loadImage(file, image=>letUserDrawAndDownload(image)))
+    askForImage()
 })
+
+
+window.addEventListener('paste',function (ev) {
+  handleDataTransferItems(ev.clipboardData.items)
+})
+
+document.body.addEventListener('dragover',function (ev) {
+  ev.preventDefault()
+   ev.stopPropagation();
+})
+document.body.addEventListener('drop',function (ev) {
+  ev.preventDefault();
+   ev.stopPropagation();
+  handleDataTransferItems(ev.dataTransfer.items)
+})
+
+function handleDataTransferItems(items){
+  // Tries to paste an image
+  let file=[].find.call(items, e=>e.kind=='file' && e.type.match('image'))
+  originalFileName='pasted-image'
+  if(file){
+    console.log('parsing pasted image content')
+    loadFile(file.getAsFile())
+    return
+  }
+  // Tries to load a remote image given its adress
+  let url=[].find.call(items, e=>e.kind=='string' )
+  if(url){
+    console.log('parsing url content')
+   url.getAsString(s=>createImageWithFileContent(s))
+ }
+}
 
 const byId = document.getElementById.bind(document)
   , DEFAULTCOLOR = "#2b76ce"
   , DEFAULTSIZE = 20;
 
+var originalFileName='pasted-image'
+let askingForImage=true;
 // Setup of the welcome  UI
-function askForImage(callback) {
+function askForImage() {
 
     let fileinput = byId('fileinput');
     fileinput.addEventListener('change', fileChanged)
     function fileChanged(changeEvent) {
         fileinput.removeEventListener('change', fileChanged);
         // go to next step
-        callback(changeEvent.target.files[0])
+
+        originalFileName=fileinput.value.split('\\').pop().split('.')[0] || 'image';
+        loadFile(changeEvent.target.files[0])
     }
 }
 
-// Transforms the file input content to a real image 
-function loadImage(fileToLoad, callback) {
-
+// Transforms the file input content to a real image
+function loadFile(fileToLoad) {
     byId('readme').innerHTML = "<h1>Loading ...</h1>";
 
     let fileReader = new FileReader();
     fileReader.onload = ()=>createImageWithFileContent(fileReader.result);
     fileReader.readAsDataURL(fileToLoad);
 
-    function createImageWithFileContent(result) {
-        let img = new Image();
-        img.onload = ()=>callback(img)
-        img.src = result
-    }
 }
 
+function createImageWithFileContent(result) {
+console.log('trying to load file as image')
+    if(!askingForImage) return
+    let img = new Image();
+    img.onload = ()=>letUserDrawAndDownload(img)
+    img.src = result
+}
 // Lets the user draw on the loaded image
 function letUserDrawAndDownload(img) {
-
+    askingForImage=false;
     const canvas = byId('drawzone')
 
     // Switch to drawing mode
@@ -71,20 +108,30 @@ function letUserDrawAndDownload(img) {
     measureScale()
     window.addEventListener('resize', measureScale);
 
-    
+
     const colorpicker = byId('colorpicker')
       , pensizePreview = byId('pensizePreview')
       , pensizePreviewDot = byId('pensizePreviewDot')
       , pensize = byId('pensize');
-    
-    // Sets draw color at load and when user clicks color input  
+
+    // Sets draw color at load and when user clicks color input
     function setColor(color) {
         pensizePreviewDot.style.background = ctx.strokeStyle = colorpicker.value = color
         localStorage.setItem('color', color);
+        refreshColorPreviewBorder()
+    }
+    function refreshColorPreviewBorder(){
+      let pensizePreviewDot = byId('pensizePreviewDot')
+      pensizePreviewDot.style.border='1px solid '+borderColor(
+        pensizePreviewDot.style.backgroundColor,
+        byId('background').style.backgroundColor
+      )
+
+
     }
     setColor(localStorage.getItem('color') || DEFAULTCOLOR);
     colorpicker.addEventListener('input', e=>setColor(e.target.value))
-    
+
     // Sets draw size at load and when the user interracts with the slider
     function setPencilSize(pxSize) {
         pensizePreviewDot.style.transform = 'scale(' + (pxSize / 10) + ')';
@@ -94,11 +141,11 @@ function letUserDrawAndDownload(img) {
     }
     pensize.addEventListener('input', e=>setPencilSize(e.target.value))
     setPencilSize(parseInt(localStorage.getItem('pensize')) || DEFAULTSIZE)
-    
+
     // To make the lines look slightly nicer
     ctx.lineCap = 'round';
 
-    // We cache the mouse position and previous mouse position. 
+    // We cache the mouse position and previous mouse position.
     // Theay are defined by touch events, and used by the draw loop
     let mousePos = {
         x: 0,
@@ -116,7 +163,7 @@ function letUserDrawAndDownload(img) {
     canvas.addEventListener("mousemove", function(e) {
         mousePos = getMousePos(e);
     }, false);
-    
+
 
     // Get the position of the mouse relative to the canvas
     function getMousePos(mouseEvent) {
@@ -151,7 +198,7 @@ function letUserDrawAndDownload(img) {
         ctx.stroke();
         lastPos = mousePos;
     }
-    
+
     // Proxy mobile events to their mouse counterpart
     function proxyTouchToMouse(touchEventName, mouseEventName) {
         canvas.addEventListener(touchEventName, function(e) {
@@ -169,11 +216,13 @@ function letUserDrawAndDownload(img) {
     proxyTouchToMouse('touchmove', 'mousemove')
 
     // Download button
+    var downloadCounter=0;
     byId('download').addEventListener('click', downloadImage, false)
     function downloadImage(e) {
-        let filename = (fileinput.value.split('\\').pop().split('.')[0] || 'image') + '-edited.png';
+        let filename = originalFileName + '-minimage-'+downloadCounter+'.png';
         this.href = canvas.toDataURL('image/png', 0.5)
         this.download = filename
+        downloadCounter++;
     }
 
     // Tap the background to switch its color (usefull for transparent images)
@@ -186,6 +235,7 @@ function letUserDrawAndDownload(img) {
     function applyBackground() {
         let options = ['#FFF', '#333']
         background.style.backgroundColor = options[currentMode % options.length]
+        refreshColorPreviewBorder()
     }
     let currentMode = localStorage.getItem('background') || 0
     applyBackground()
@@ -193,3 +243,25 @@ function letUserDrawAndDownload(img) {
 
 }
 
+ function colorToRGBA(color) {
+    var canvas = document.createElement('canvas');
+    canvas.width = canvas.height = 1;
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, 1, 1);
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, 1, 1);
+    return [ ... ctx.getImageData(0, 0, 1, 1).data ];
+}
+function luminance(color){
+  return colorToRGBA(color).slice(0,3).reduce((a,b)=>a+b,0)/3
+}
+
+function borderColor(foreground, background) {
+  let bgL=luminance(background);
+  let fgL=luminance(foreground);
+  if(bgL>125 && fgL > 200)
+  return 'black';
+  if(bgL<125 && fgL <25)
+  return 'white';
+  return 'transparent';
+}

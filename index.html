@@ -9,12 +9,17 @@
     </head>
     <body>
         <div id="inputForAFile">
-            <div id="readme">
-                <img src="./images/logo-min.svg" width="642.487" height="128.368"/>
-                <h1>Tap to select an image</h1>
-                <p class="tip">Downloading fails if you are within facebook. Try opening the page in chrome instead.</p>
-            </div>
-            <input type="file" id="fileinput" accept="image/*"/>
+          <div id="readme">
+            <img src="./images/logo-min.svg" width="642.487" height="128.368"/>
+            <label class="fileInputWrapper">
+                <span class="text-label">Tap to select an image</span>
+                <input type="file" id="fileinput" accept="image/*"/>
+            </label>
+            <ul class="tip">
+              <li>Downloading fails if you are within facebook. Try opening the page in chrome instead.</li>
+              <li>Click the background around your image to change its color</li>
+            </ul>
+          </div>
         </div>
         <div id="drawAndDownload" style="display:none;">
             <div id="background"></div>

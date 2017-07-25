@@ -22,8 +22,8 @@
     "webpack-dev-server": "^2.6.1"
   },
   "scripts": {
-    "start": "NODE_ENV=development  webpack-dev-server",
-    "build": "webpack -p"
+    "start": "rm -rf dist && NODE_ENV=development  webpack-dev-server",
+    "build": "rm -rf build && webpack -p"
   },
   "repository": {
     "type": "git",

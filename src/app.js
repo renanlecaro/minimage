@@ -309,7 +309,10 @@ function openColorPicker(currentColor, callback) {
   paletteColors.forEach(color => {
     let button = document.createElement('button');
     button.classList.add('colorbutton');
-    if (color === currentColor) button.classList.add('active');
+    if (color === currentColor){
+      button.classList.add('active');
+      button.innerHTML='Your selected color'
+    }
     button.style.backgroundColor = color.toLowerCase();
     button.addEventListener('click', () => pickColor(color));
     modal.appendChild(button);

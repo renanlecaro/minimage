@@ -23,7 +23,8 @@
   },
   "scripts": {
     "start": "rm -rf dist && NODE_ENV=development  webpack-dev-server",
-    "build": "rm -rf build && webpack -p"
+    "build": "rm -rf build && webpack -p",
+    "publish":"rm -rf build && webpack -p && git add . --all && git commit && git push"
   },
   "repository": {
     "type": "git",

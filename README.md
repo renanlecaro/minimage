@@ -16,5 +16,5 @@ How to install
 How to run locally (will transpile source to usable js and css)
 - npm start
 
-How to build
-- npm run build
+How to publish changes
+- npm run publish (it will ask for a commit message)

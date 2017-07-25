@@ -5,7 +5,7 @@
         <title>Minimage : minimal image editor</title>
         <meta name="description" content="Free web app to draw on your images. Works on mobile. No watermark."/>
         <link rel="manifest" href="./manifest.json">
-        <link rel="stylesheet" href="/dist/main.css">
+        <link rel="stylesheet" href="/dist/main.css" class="addRandomArg">
     </head>
     <body>
         <noscript><h1>This app requires javascript to be enabled, sorry.</h1></noscript>
@@ -35,7 +35,11 @@
                 <a id="download">Download</a>
             </div>
         </div>
-        <script src="./dist/bundle.js"></script>
+        <script src="./dist/bundle.js" class="addRandomArg"></script>
+        </script>
+        <script>
+        // Cache busting before proper hash-based cache busting
+        [].forEach.call(document.getElementsByClassName('addRandomArg'), function(n){ if(n.src){n.src+='?'+Math.random()};if(n.href){n.href+='?'+Math.random()}; })
         </script>
     </body>
 </html>

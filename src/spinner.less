@@ -1,0 +1,73 @@
+div#spinners {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transition: opacity 0.2s;
+  &.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  i {
+    animation: bounce 0.8s infinite;
+    display: block;
+    position: absolute;
+    &:after {
+      content: "";
+      display: block;
+      background: red;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      animation: rainbow 0.8s infinite, squash 0.8s infinite;
+    }
+    &:nth-child(1) {
+      left: -50px;
+      &,
+      &:after {
+        animation-delay: -0.7333s;
+      }
+    }
+    &:nth-child(3) {
+      left: 50px;
+      &,
+      &:after {
+        animation-delay: -0.266s;
+      }
+    }
+    z-index: 11;
+  }
+  &:after {
+    content: "";
+    display: block;
+    background: rgba(255, 255, 255, 0.8);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translate(0, -100px);
+    animation-timing-function: ease-in;
+  }
+  50% {
+    transform: translate(0, 0);
+    animation-timing-function: ease-out;
+  }
+}
+
+@keyframes squash {
+  0%,
+  50%,
+  100% {
+    transform: scaleX(0.9) scaleY(1.1);
+  }
+  60% {
+    transform: scaleX(1.2) scaleY(0.6);
+  }
+}

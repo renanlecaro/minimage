@@ -10,7 +10,6 @@ import toggleAbleBackground from "./toggleAbleBackground.js";
 import setupEditableCanvas from "./editableCanvas.js";
 import canvasMergerAndDonwloaderLink from "./canvasMergerAndDonwloaderLink.js";
 import pencilSizeSlider from "./pencilSizeSlider.js";
-
 const byId = document.getElementById.bind(document),
   DEFAULTSIZE = 20;
 

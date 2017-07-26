@@ -9,10 +9,7 @@ export default function(
   function refreshColorPreviewBorder() {
     pensizePreviewDot.style.border =
       "1px solid " +
-      borderColor(
-        pensizePreviewDot.style.backgroundColor,
-        elementToContrastWith.style.backgroundColor
-      );
+      borderColor(currentColor, elementToContrastWith.style.backgroundColor);
   }
 
   let currentColor;
@@ -53,6 +50,7 @@ function luminance(color) {
 }
 
 function borderColor(foreground, background) {
+  if (foreground == "eraser") return "transparent";
   let bgL = luminance(background);
   let fgL = luminance(foreground);
   if (bgL > 125 && fgL > 200) return "black";

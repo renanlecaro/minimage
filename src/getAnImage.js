@@ -1,3 +1,4 @@
+import { startTask, endTask } from "./spinners.js";
 export default function({ onImageCreated, fileinput }) {
   // Callbacks onImageCreated with img tag and filename
   let originalFileName = "pasted-image";
@@ -5,19 +6,27 @@ export default function({ onImageCreated, fileinput }) {
 
   // Transforms the file input content to a real image
   function loadFile(fileToLoad) {
+    startTask();
     let fileReader = new FileReader();
-    fileReader.onload = () => createImageWithFileContent(fileReader.result);
+    fileReader.onload = () => {
+      createImageWithFileContent(fileReader.result);
+      endTask();
+    };
+    fileReader.onerror = endTask;
     fileReader.readAsDataURL(fileToLoad);
   }
 
   function createImageWithFileContent(result) {
+    startTask();
     console.log("trying to load file as image");
     if (!askingForImage) return;
     let img = new Image();
     img.onload = () => {
       askingForImage = false;
       onImageCreated(img, originalFileName);
+      endTask();
     };
+    img.onerror = endTask;
     img.src = result;
   }
 

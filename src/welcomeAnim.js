@@ -1,13 +1,17 @@
-function randomColor(exception = "") {
-  let pal = "#F44336,#E91E63,#9C27B0,#673AB7,#3F51B5,#2196F3,#03A9F4,#00BCD4,#009688,#4CAF50,#8BC34A,#CDDC39,#FFEB3B,#FFC107,#FF9800,#FF5722"
-    .split(",")
-    .filter(c => c != exception);
-  return pal[Math.floor(Math.random() * (pal.length + 0.99))];
+import { luminance } from "./colorToRGB.js";
+const coolColors = "#F44336,#E91E63,#9C27B0,#673AB7,#3F51B5,#2196F3,#03A9F4,#00BCD4,#009688,#4CAF50,#8BC34A,#CDDC39,#FFEB3B,#FFC107,#FF9800,#FF5722".split(
+  ","
+);
+const darkCoolColors = coolColors.filter(c => luminance(c) < 150);
+
+function randomColor(colorPool, exception = "") {
+  let withoutEx = colorPool.filter(c => c != exception);
+  return withoutEx[Math.floor(Math.random() * (withoutEx.length + 0.99))];
 }
 
 export default function(canvas) {
   let ctx, w, h;
-  let bgColor = randomColor();
+  let bgColor = randomColor(darkCoolColors);
   function reset() {
     w = canvas.width = window.innerWidth;
     h = canvas.height = window.innerHeight;
@@ -15,9 +19,8 @@ export default function(canvas) {
     ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, w, h);
     ctx.lineCap = "round";
+    randomizeInst();
   }
-  reset();
-  window.addEventListener("resize", reset);
 
   let position, speed, acceleration, timeoutHandle, accelerationTimeoutHandle;
   function randomizeInst() {
@@ -36,12 +39,14 @@ export default function(canvas) {
       y: Math.random() * 10 - 5
     };
 
-    ctx.strokeStyle = randomColor(bgColor);
+    ctx.strokeStyle = randomColor(coolColors, bgColor);
     ctx.lineWidth = 20 + Math.random() * 40;
     ctx.beginPath();
     ctx.moveTo(position.x, position.y);
   }
-  randomizeInst();
+
+  reset();
+  window.addEventListener("resize", reset);
 
   function randomAcceletation() {
     acceleration = {
@@ -94,6 +99,7 @@ export default function(canvas) {
   }
 
   return {
-    stopAnim
+    stopAnim,
+    bgColor
   };
 }

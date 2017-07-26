@@ -71,8 +71,17 @@ canvas#welcome {
   }
 }
 
-.fileInputWrapper {
-  .button(#333, white);
+#fileInputWrapper {
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+
+  font-size: 120%;
+  @media (min-width: 400) {
+    font-size: 140%;
+  }
   padding: 20px;
   position: absolute;
   top: 0;
@@ -80,8 +89,17 @@ canvas#welcome {
   bottom: 0;
   right: 0;
   margin: auto;
-  max-width: 200px;
-  max-height: 50px;
+  max-width: 250px;
+  max-height: 250px;
+  border-radius: 50%;
+
+  animation: squish 2s infinite;
+
+  background-clip: padding-box;
+  border: 4px solid transparent;
+  &:hover {
+    border-color: white;
+  }
 }
 
 #inputForAFile,
@@ -288,8 +306,9 @@ div#background {
     .bounceClick;
     // Avoids button with text taking more space
     line-height: 0;
-
-    font-size: 140%;
+    @media (min-width: 600) {
+      font-size: 140%;
+    }
     &.active {
       font-weight: bold;
     }

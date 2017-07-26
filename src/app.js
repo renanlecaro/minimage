@@ -23,7 +23,8 @@ askForIMG({
   }
 });
 
-let { stopAnim } = welcomeAnim(byId("welcome"));
+let { stopAnim, bgColor } = welcomeAnim(byId("welcome"));
+byId("fileInputWrapper").style.color = bgColor;
 
 // Lets the user draw on the loaded image
 function letUserDrawAndDownload(img) {

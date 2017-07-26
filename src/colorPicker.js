@@ -1,5 +1,5 @@
 const DEFAULTCOLOR = "#2b76ce";
-import colorToRGB from "./colorToRGB.js";
+import { luminance } from "./colorToRGB.js";
 import { paletteColors } from "./palette.js";
 export default function(
   pensizePreview,
@@ -46,11 +46,6 @@ export default function(
     setColorDotSize,
     refreshColorPreviewBorder
   };
-}
-
-function luminance(color) {
-  return colorToRGB(color).reduce((a, b) => a + b, 0) / 3;
-  pickColor;
 }
 
 function borderColor(foreground, background) {
@@ -111,6 +106,7 @@ function setCursor(node, size, color) {
   let c = document.createElement("canvas");
   c.width = c.height = s;
   let ctx = c.getContext("2d");
+
   if (color == "eraser") drawEraser(ctx, s);
   else drawColorCircle(ctx, s, color);
   let cursor = c.toDataURL("image/png");
@@ -128,7 +124,7 @@ function drawEraser(ctx, s) {
   ctx.fillStyle = "#da502d";
   ctx.fillRect(0, 0, s * 2 / 3, s);
   ctx.fillStyle = "#6584a5";
-  ctx.fillRect(s * 2 / 3, 0, s, s);
+  ctx.fillRect(s * 2 / 3 - 1, 0, s, s);
   ctx.globalCompositeOperation = "destination-in";
   drawColorCircle(ctx, s, "white");
 }

@@ -1,0 +1,32 @@
+body.runningWithinWebview {
+  background: #f44336;
+  color: white;
+  max-width: 500px;
+  padding: 20px;
+  margin: 200px auto;
+  font-size: 25px;
+  &:after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    border: 40px solid;
+    border-color: transparent transparent white transparent;
+    position: fixed;
+    top: 0;
+    right: 20px;
+    animation: pointAtButton 1s infinite;
+  }
+}
+@keyframes pointAtButton {
+  0%,
+  100% {
+    transform: rotate(30deg);
+  }
+  33% {
+    transform: translate(-5px, 20px) rotate(35deg) scale(0.9);
+  }
+  66% {
+    transform: translate(0, -20px) rotate(25deg) scale(1.1);
+  }
+}

@@ -2,12 +2,17 @@ import { mergeCanvasAndImage } from "./canvasMergerAndDonwloaderLink.js";
 
 export default function(canvas, { onMouseDown, onMouseUp, OrginalImage }) {
   // We cache some zoom related data to avoid getting them all the time
-  let scale, rect;
+  let scale, rect, lastUsedPXsize;
+
   function measureScale() {
     rect = canvas.getBoundingClientRect();
     scale = rect.width / canvas.width;
+    if (lastUsedPXsize && ctx) {
+      ctx.lineWidth = lastUsedPXsize / scale;
+    }
   }
   measureScale();
+
   window.addEventListener("resize", measureScale);
 
   let ctx = canvas.getContext("2d");
@@ -128,6 +133,7 @@ export default function(canvas, { onMouseDown, onMouseUp, OrginalImage }) {
       ctx.strokeStyle = color;
     },
     setPencilSize(pxSize) {
+      lastUsedPXsize = pxSize;
       ctx.lineWidth = pxSize / scale;
     }
   };

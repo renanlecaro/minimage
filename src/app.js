@@ -11,6 +11,7 @@ import setupEditableCanvas from "./editableCanvas.js";
 import { makeDownloadLink } from "./canvasMergerAndDonwloaderLink.js";
 import pencilSizeSlider from "./pencilSizeSlider.js";
 import welcomeAnim from "./welcomeAnim.js";
+import { checkRunWithinWebview } from "./checkRunWithinWebview.js";
 const byId = document.getElementById.bind(document),
   DEFAULTSIZE = 20;
 
@@ -49,6 +50,18 @@ function letUserDrawAndDownload(img) {
   let ctx = canvas.getContext("2d");
   let hasDoneFirstDraw = false;
   let barClass = byId("topbar").classList;
+
+  let background = byId("background");
+
+  const { setColorDotSize, refreshColorPreviewBorder } = setupColorPicker(
+    byId("pensizePreview"),
+    {
+      canvasForCursor: canvas,
+      onColorChange: setColor,
+      elementToContrastWith: background
+    }
+  );
+
   let {
     drawWithColor,
     drawWithEraser,
@@ -66,7 +79,6 @@ function letUserDrawAndDownload(img) {
       }
       barClass.remove("drawInProgress");
     },
-
     OrginalImage
   });
 
@@ -78,17 +90,6 @@ function letUserDrawAndDownload(img) {
       drawWithColor(color);
     }
   }
-
-  let background = byId("background");
-
-  const { setColorDotSize, refreshColorPreviewBorder } = setupColorPicker(
-    byId("pensizePreview"),
-    {
-      canvasForCursor: canvas,
-      onColorChange: setColor,
-      elementToContrastWith: background
-    }
-  );
   // Tap the background to switch its color (usefull for transparent images)
   toggleAbleBackground(background, { onChange: refreshColorPreviewBorder });
 

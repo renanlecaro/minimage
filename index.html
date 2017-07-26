@@ -5,7 +5,7 @@
         <title>Minimage : minimal image editor</title>
         <meta name="description" content="Free web app to draw on your images. Works on mobile. No watermark."/>
         <link rel="manifest" href="./manifest.json">
-        <link rel="stylesheet" href="/dist/main.css?cachebust=1821">
+        <link rel="stylesheet" href="/dist/main.css?cachebust=28796">
 
     </head>
     <body>
@@ -13,6 +13,7 @@
         <div id="inputForAFile">
           <div id="readme">
             <img src="./images/logo-min.svg" draggable="false" width="642.487" height="128.368"/>
+
             <label class="fileInputWrapper">
                 <span class="text-label">Tap to select an image</span>
                 <input type="file" id="fileinput" accept="image/*"/>
@@ -24,19 +25,19 @@
           </div>
         </div>
         <div id="drawAndDownload" style="display:none;">
-            <div id="background"></div>
             <div id="drawzoneWrapper">
+                <div id="background"></div>
               <canvas id="drawzone"></canvas>
             </div>
             <div id="topbar">
-                <div id="pensizePreview" >
+                <button id="pensizePreview" >
                     <div id="pensizePreviewDot"></div>
-                </div>
+                </button>
                 <input type="range" id="pensize" min="2" max="40"/>
                 <a id="download">Download</a>
             </div>
         </div>
-        <script src="./dist/bundle.js?cachebust=1821"></script>
+        <script src="./dist/bundle.js?cachebust=28796"></script>
         </script>
 
     </body>

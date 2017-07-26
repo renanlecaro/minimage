@@ -3,9 +3,19 @@ body {
   margin: 0;
   padding: 0;
 }
+@import './slider.less';
 
 @blue: #0078ff;
 
+.bounceClick {
+  &:active {
+    transform: scale(0.95);
+  }
+  transition: transform 0.2s;
+}
+button {
+  cursor: pointer;
+}
 .button {
   position: relative;
   color: white;
@@ -26,6 +36,8 @@ body {
   &:focus,
   &:hover {
     background: darken(@blue, 10%);
+
+    animation: squish 0.2s;
   }
 
   &:active {
@@ -140,15 +152,10 @@ ul.tip {
   align-items: center;
   z-index: 3;
 
-  input#colorpicker {
-    width: 0;
-    height: 0;
-    background: white;
-    border: none;
-    outline: none;
-    opacity: 1;
-    padding: 0;
-    margin: 0;
+  pointer-events: none;
+
+  & > * {
+    pointer-events: auto;
   }
   #pensizePreview {
     width: 44px;
@@ -156,6 +163,21 @@ ul.tip {
     position: relative;
     margin-right: 20px;
 
+    background: transparent;
+    border: none;
+    outline: none;
+    &:focus,
+    &:active {
+      outline: none;
+    }
+    .bounceClick;
+    &:hover {
+      animation: squish 0.5s infinite;
+
+      #pensizePreviewDot {
+        animation: rainbow 1s infinite;
+      }
+    }
     #pensizePreviewDot {
       border-radius: 50%;
       height: 10px;
@@ -167,8 +189,10 @@ ul.tip {
       bottom: 0;
       margin: auto;
       &.eraser {
-        background: url(/images/eraser.svg);
+        background: url(/images/eraser-color.svg);
         background-repeat: no-repeat;
+        background-size: contain;
+        border-radius: 0;
       }
     }
   }
@@ -177,6 +201,8 @@ ul.tip {
     width: 100px;
     text-transform: uppercase;
     font-size: 80%;
+
+    margin-left: 20px;
   }
 }
 div#background {
@@ -195,31 +221,108 @@ div#background {
   left: 0px;
   right: 0px;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.73);
+  background: white;
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
   button {
-    width: 33%;
     border: none;
     flex-grow: 1;
+    width: 30%;
+    margin: 5px;
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0);
+    .bounceClick;
+    // Avoids button with text taking more space
+    line-height: 0;
+
+    font-size: 140%;
     &.active {
-      transform: scale(1.1);
-      box-shadow: 0 0 20px black;
+      font-weight: bold;
     }
-    img {
-      width: 1.5em;
+    &.colorbutton {
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.58);
+      &:hover {
+        animation: squish 0.3s;
+      }
+    }
+    &.eraser {
       position: relative;
-      top: 5px;
-      margin-right: 5px;
+      background: transparent;
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+      }
+      &:hover img {
+        animation: eraseStuff 0.5s infinite;
+      }
+      span.imagelabel {
+        position: absolute;
+        left: 50%;
+        opacity: 0.8;
+        padding-left: 70px;
+      }
     }
   }
-  animation: zoomIn 0.2s;
+  animation: openModal 0.2s;
+  &.closing {
+    pointer-events: none;
+    animation: closeModal 0.3s ease-in;
+  }
 }
 
-@keyframes zoomIn {
+@keyframes squish {
+  33% {
+    transform: scaleX(0.95);
+  }
+  66% {
+    transform: scaleX(0.97) scaleY(1.05);
+  }
+  100% {
+  }
+}
+@keyframes eraseStuff {
+  33% {
+    transform: rotate(-4deg) translate(-15px, 0);
+  }
+  66% {
+    transform: rotate(-5deg) scaleX(0.97) scaleY(1.02);
+  }
+}
+
+@keyframes openModal {
   0% {
     opacity: 0;
-    transform: scale(0.5);
+    transform: scale(0.5) translate(0, -100px);
+  }
+}
+@keyframes closeModal {
+  100% {
+    transform: scale(0.5) translate(0, 100px);
+    opacity: 0;
+  }
+}
+
+@keyframes rainbow {
+  16% {
+    background-color: #f44336;
+  }
+  33% {
+    background-color: #3f51b5;
+  }
+  50% {
+    background-color: #2196f3;
+  }
+  66% {
+    background-color: #4caf50;
+  }
+  75% {
+    background-color: #8bc34a;
   }
 }

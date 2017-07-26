@@ -5,23 +5,18 @@
         <title>Minimage : minimal image editor</title>
         <meta name="description" content="Free web app to draw on your images. Works on mobile. No watermark."/>
         <link rel="manifest" href="./manifest.json">
-        <link rel="stylesheet" href="/dist/main.css?cachebust=19132">
+        <link rel="stylesheet" href="/dist/main.css?cachebust=2510">
 
     </head>
     <body>
         <noscript><h1>This app requires javascript to be enabled, sorry.</h1></noscript>
         <div id="inputForAFile">
           <div id="readme">
-            <img src="./images/logo-min.svg" draggable="false" width="642.487" height="128.368"/>
-
             <label class="fileInputWrapper">
-                <span class="text-label">Tap to select an image</span>
+                <span class="text-label">Pick a photo to draw on</span>
                 <input type="file" id="fileinput" accept="image/*"/>
             </label>
-            <ul class="tip">
-              <li>Downloading fails if you are within facebook. Try opening the page in chrome instead.</li>
-              <li>Click the background around your image to change its color</li>
-            </ul>
+            <canvas id="welcome"></canvas>
           </div>
         </div>
         <div id="drawAndDownload" style="display:none;">
@@ -38,7 +33,7 @@
             </div>
         </div>
         <div id="spinners"/><i></i><i></i><i></i></spinner>
-        <script src="./dist/bundle.js?cachebust=19132"></script>
+        <script src="./dist/bundle.js?cachebust=2510"></script>
         </script>
 
     </body>

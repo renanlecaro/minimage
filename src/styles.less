@@ -2,6 +2,7 @@ body {
   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 @import './slider.less';
 @import './spinner.less';
@@ -37,7 +38,6 @@ button {
   &:focus,
   &:hover {
     background: darken(@blue, 10%);
-
     animation: squish 0.2s;
   }
 
@@ -47,24 +47,26 @@ button {
     background: darken(@blue, 20%);
   }
 }
-#readme {
-  max-width: 400px;
-  padding: 1rem;
-  color: #666;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-  margin: 0 auto;
-  img {
-    width: 100%;
-  }
-  .fileInputWrapper {
-    .button;
-    padding: 20px;
-  }
+canvas#welcome {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.fileInputWrapper {
+  .button;
+  padding: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  max-width: 200px;
+  max-height: 50px;
 }
 
 #inputForAFile,

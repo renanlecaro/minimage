@@ -10,6 +10,7 @@ import toggleAbleBackground from "./toggleAbleBackground.js";
 import setupEditableCanvas from "./editableCanvas.js";
 import canvasMergerAndDonwloaderLink from "./canvasMergerAndDonwloaderLink.js";
 import pencilSizeSlider from "./pencilSizeSlider.js";
+import welcomeAnim from "./welcomeAnim.js";
 const byId = document.getElementById.bind(document),
   DEFAULTSIZE = 20;
 
@@ -22,9 +23,12 @@ askForIMG({
   }
 });
 
+let { stopAnim } = welcomeAnim(byId("welcome"));
+
 // Lets the user draw on the loaded image
 function letUserDrawAndDownload(img) {
   OrginalImage = img;
+  stopAnim();
   const canvas = byId("drawzone"),
     drawzoneWrapper = byId("drawzoneWrapper");
   drawzoneWrapper.appendChild(img);

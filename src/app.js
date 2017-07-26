@@ -40,14 +40,25 @@ function letUserDrawAndDownload(img) {
   // Fits the canvas to screen
   let maxRes = Math.max(window.innerHeight, window.innerWidth);
   let imgScale = Math.max(img.width / maxRes, img.height / maxRes, 1);
-  img.style.maxWidth = canvas.width = img.width / imgScale;
-  img.style.maxHeight = canvas.height = img.height / imgScale;
+  img.width = canvas.width = img.width / imgScale;
+  img.height = canvas.height = img.height / imgScale;
+  drawzoneWrapper.style.maxWidth = img.width;
+  drawzoneWrapper.style.maxHeight = img.height;
 
   let ctx = canvas.getContext("2d");
-  let { drawWithColor, drawWithEraser, setPencilSize } = setupEditableCanvas(
-    canvas,
-    {}
-  );
+  let hasDoneFirstDraw = false;
+  let {
+    drawWithColor,
+    drawWithEraser,
+    setPencilSize
+  } = setupEditableCanvas(canvas, {
+    onMouseUp: () => {
+      if (!hasDoneFirstDraw) {
+        hasDoneFirstDraw = true;
+        download.classList.add("usable");
+      }
+    }
+  });
 
   // Sets draw color at load and when user clicks color input
   function setColor(color) {
@@ -63,6 +74,7 @@ function letUserDrawAndDownload(img) {
   const { setColorDotSize, refreshColorPreviewBorder } = setupColorPicker(
     byId("pensizePreview"),
     {
+      canvasForCursor: canvas,
       onColorChange: setColor,
       elementToContrastWith: background
     }

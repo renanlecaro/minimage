@@ -7,8 +7,6 @@ body {
 @import './slider.less';
 @import './spinner.less';
 
-@blue: #0078ff;
-
 .bounceClick {
   &:active {
     transform: scale(0.95);
@@ -18,10 +16,11 @@ body {
 button {
   cursor: pointer;
 }
-.button {
+.button (@text, @background) {
   position: relative;
-  color: white;
-  background: @blue;
+  color: @text;
+  background: @background;
+
   font-weight: bold;
   display: flex;
   justify-content: center;
@@ -30,21 +29,20 @@ button {
   text-decoration: none;
   cursor: pointer;
   transform: translate(0, -2px);
-  box-shadow: 0 3px 0 darken(@blue, 20%);
+  box-shadow: 0 3px 0 darken(@background, 20%);
   transition: transform 0.2s, box-shadow 0.2s;
   border-radius: 3px;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.28);
   margin: 5px 0;
   &:focus,
   &:hover {
-    background: darken(@blue, 10%);
+    background: darken(@background, 10%);
     animation: squish 0.2s;
   }
 
   &:active {
     transform: none;
-    box-shadow: 0 0 0 darken(@blue, 20%);
-    background: darken(@blue, 20%);
+    box-shadow: 0 0 0 darken(@background, 20%);
+    background: darken(@background, 20%);
   }
 }
 canvas#welcome {
@@ -57,7 +55,7 @@ canvas#welcome {
 }
 
 .fileInputWrapper {
-  .button;
+  .button(#333, white);
   padding: 20px;
   position: absolute;
   top: 0;
@@ -88,8 +86,14 @@ div#drawAndDownload {
   left: 0;
   right: 0;
 }
+
 #drawzoneWrapper {
   position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
   height: 100%;
 
@@ -195,19 +199,48 @@ ul.tip {
         background: url(/images/eraser-color.svg);
         background-repeat: no-repeat;
         background-size: contain;
-        border-radius: 0;
+        background-position-y: 2px;
       }
     }
   }
   #download {
-    .button;
     width: 100px;
     text-transform: uppercase;
     font-size: 80%;
-
     margin-left: 20px;
+    position: relative;
+    left: 10000px;
+    &.usable {
+      left: 0;
+
+      animation: bounceIn 0.5s;
+    }
   }
 }
+
+@keyframes bounceIn {
+  0% {
+    transform: translate(50vh, 0);
+    animation-timing-function: ease-in;
+  }
+  50% {
+    transform: translate(0, 0);
+    animation-timing-function: ease-out;
+  }
+  75% {
+    transform: translate(50px, 0);
+  }
+  100% {
+    transform: translate(0px, 0);
+  }
+}
+body.background_n_1 #download {
+  .button(#333, white);
+}
+body.background_n_0 #download {
+  .button(white, #333);
+}
+
 div#background {
   background: white;
   position: fixed;

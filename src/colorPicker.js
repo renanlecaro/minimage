@@ -3,7 +3,7 @@ import colorToRGB from "./colorToRGB.js";
 import { paletteColors } from "./palette.js";
 export default function(
   pensizePreview,
-  { onColorChange, elementToContrastWith }
+  { onColorChange, elementToContrastWith, canvasForCursor }
 ) {
   const pensizePreviewDot = pensizePreview.children[0];
 
@@ -19,6 +19,7 @@ export default function(
   );
   function onColorPicked(color) {
     currentColor = color;
+    setCursor(canvasForCursor, currentSize, currentColor);
     if (color == "eraser") {
       pensizePreviewDot.style.background = "";
       pensizePreviewDot.classList.add("eraser");
@@ -30,8 +31,10 @@ export default function(
     }
     onColorChange(color);
   }
-
+  let currentSize;
   function setColorDotSize(pxSize) {
+    currentSize = pxSize;
+    setCursor(canvasForCursor, currentSize, currentColor);
     pensizePreviewDot.style.transform = "scale(" + pxSize / 10 + ")";
   }
 
@@ -101,4 +104,30 @@ function openColorPicker(currentColor, callback) {
     modal.classList.add("closing");
     setTimeout(() => document.body.removeChild(modal), 300);
   }
+}
+
+function setCursor(node, s, color) {
+  let c = document.createElement("canvas");
+  c.width = c.height = s;
+  let ctx = c.getContext("2d");
+  if (color == "eraser") drawEraser(ctx, s);
+  else drawColorCircle(ctx, s, color);
+  let cursor = c.toDataURL("image/png");
+  node.style.cursor = `url(${cursor}) ${s / 2} ${s / 2},auto`;
+}
+
+function drawColorCircle(ctx, s, color) {
+  ctx.beginPath();
+  ctx.arc(s / 2, s / 2, s / 2, 0, 2 * Math.PI, false);
+  ctx.fillStyle = color;
+  ctx.fill();
+}
+
+function drawEraser(ctx, s) {
+  ctx.fillStyle = "#da502d";
+  ctx.fillRect(0, 0, s * 2 / 3, s);
+  ctx.fillStyle = "#6584a5";
+  ctx.fillRect(s * 2 / 3, 0, s, s);
+  ctx.globalCompositeOperation = "destination-in";
+  drawColorCircle(ctx, s, "white");
 }

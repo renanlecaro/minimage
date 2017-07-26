@@ -1,4 +1,4 @@
-export default function(canvas, {}) {
+export default function(canvas, { onMouseUp }) {
   // We cache some zoom related data to avoid getting them all the time
   let scale, rect;
   function measureScale() {
@@ -59,6 +59,7 @@ export default function(canvas, {}) {
     drawLoop();
   }
   function endDrawLoop() {
+    isDrawing && onMouseUp();
     isDrawing = false;
   }
 

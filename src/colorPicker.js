@@ -106,7 +106,8 @@ function openColorPicker(currentColor, callback) {
   }
 }
 
-function setCursor(node, s, color) {
+function setCursor(node, size, color) {
+  let s = size < 4 ? 4 : size;
   let c = document.createElement("canvas");
   c.width = c.height = s;
   let ctx = c.getContext("2d");

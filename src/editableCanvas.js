@@ -1,4 +1,6 @@
-export default function(canvas, { onMouseUp }) {
+import { mergeCanvasAndImage } from "./canvasMergerAndDonwloaderLink.js";
+
+export default function(canvas, { onMouseDown, onMouseUp, OrginalImage }) {
   // We cache some zoom related data to avoid getting them all the time
   let scale, rect;
   function measureScale() {
@@ -24,11 +26,28 @@ export default function(canvas, { onMouseUp }) {
   canvas.addEventListener(
     "mousedown",
     function(e) {
+      if (e.which == 3) {
+        // We detected a right click on canvas, probably to save it.
+        // We merge the content of the background image with the canvas
+        mergeCanvasAndImage(canvas, OrginalImage);
+        return;
+      }
       mousePos = lastPos = getMousePos(e);
       startDrawLoop();
+      onMouseDown();
     },
     false
   );
+
+  // Allow ctrl-c > pasting to word & co
+  document.addEventListener("copy", ev => {
+    ev.preventDefault();
+    mergeCanvasAndImage(canvas, OrginalImage);
+    ev.clipboardData.setData(
+      "text/html",
+      '<img src="' + canvas.toDataURL() + '"/>'
+    );
+  });
 
   document.addEventListener("mouseup", endDrawLoop, false);
 

@@ -53,6 +53,7 @@ canvas#welcome {
   bottom: 0;
   z-index: -1;
 }
+
 .links {
   @media (max-width: 700px) {
     display: none;
@@ -69,6 +70,12 @@ canvas#welcome {
     padding: 5px;
     color: white;
   }
+  transform: translate(0, 100%);
+  transition: transform 0.2s;
+}
+// Show links when cursor in page
+#inputForAFile:hover .links {
+  transform: none;
 }
 
 #fileInputWrapper {
@@ -93,15 +100,21 @@ canvas#welcome {
   max-height: 250px;
   border-radius: 50%;
 
-  animation: squish 2s infinite;
-
-  background-clip: padding-box;
-  border: 4px solid transparent;
-  &:hover {
-    border-color: white;
-  }
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.1s, transform 0.3s;
 }
 
+#inputForAFile:hover {
+  #fileInputWrapper {
+    opacity: 1;
+    transform: scale(1);
+    &:hover {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+}
 #inputForAFile,
 #fileinput,
 canvas#drawzone {
@@ -117,7 +130,7 @@ div#drawAndDownload {
   top: 0;
   display: block;
   position: absolute;
-  bottom: 40px;
+  bottom: 0;
   left: 0;
   right: 0;
 }
@@ -188,16 +201,23 @@ ul.tip {
   right: 0;
   height: 40px;
 
-  padding: 2px 5px;
+  padding: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 3;
-
-  pointer-events: none;
+  overflow: hidden;
+  max-width: 340px;
+  margin: auto;
+  border-radius: 5px;
+  bottom: 10px;
 
   & > * {
     pointer-events: auto;
+  }
+  transition: transform 0.2s, background-color 0.3s;
+  &.drawInProgress {
+    transform: translate(0, 150px);
   }
   #pensizePreview {
     width: 44px;
@@ -239,7 +259,7 @@ ul.tip {
     }
   }
   #download {
-    width: 100px;
+    width: 140px;
     text-transform: uppercase;
     font-size: 80%;
     margin-left: 20px;
@@ -247,33 +267,57 @@ ul.tip {
     left: 10000px;
     &.usable {
       left: 0;
+      animation: bounceIn 0.8s;
+    }
+    span.icon {
+      padding: 0 5px;
+      opacity: 0.8;
+      transform: scale(0.8);
+    }
+    @media (max-width: 380px) {
+      width: 50px;
 
-      animation: bounceIn 0.5s;
+      .label {
+        display: none;
+      }
     }
   }
 }
 
 @keyframes bounceIn {
-  0% {
-    transform: translate(50vh, 0);
+  0%,
+  50% {
+    opacity: 0;
+    transform: scale(0.5);
     animation-timing-function: ease-in;
   }
-  50% {
-    transform: translate(0, 0);
+  80% {
+    opacity: 1;
+    transform: scale(1.2) translate(0, -5px);
     animation-timing-function: ease-out;
   }
-  75% {
-    transform: translate(50px, 0);
-  }
   100% {
-    transform: translate(0px, 0);
   }
 }
-body.background_n_1 #download {
-  .button(#333, white);
+body.background_n_1 {
+  #download {
+    .button(#333, white);
+  }
+  #topbar {
+    background-color: rgba(51, 51, 51, 0.9);
+  }
 }
-body.background_n_0 #download {
-  .button(white, #333);
+
+body.background_n_0 {
+  #download {
+    .button(white, #333);
+    span.icon svg path {
+      fill: white;
+    }
+  }
+  #topbar {
+    background-color: rgba(221, 221, 221, 0.9);
+  }
 }
 
 div#background {

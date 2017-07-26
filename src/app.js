@@ -8,7 +8,7 @@ import setupColorPicker from "./colorPicker.js";
 import askForIMG from "./getAnImage.js";
 import toggleAbleBackground from "./toggleAbleBackground.js";
 import setupEditableCanvas from "./editableCanvas.js";
-import canvasMergerAndDonwloaderLink from "./canvasMergerAndDonwloaderLink.js";
+import { makeDownloadLink } from "./canvasMergerAndDonwloaderLink.js";
 import pencilSizeSlider from "./pencilSizeSlider.js";
 import welcomeAnim from "./welcomeAnim.js";
 const byId = document.getElementById.bind(document),
@@ -48,17 +48,26 @@ function letUserDrawAndDownload(img) {
 
   let ctx = canvas.getContext("2d");
   let hasDoneFirstDraw = false;
+  let barClass = byId("topbar").classList;
   let {
     drawWithColor,
     drawWithEraser,
     setPencilSize
   } = setupEditableCanvas(canvas, {
-    onMouseUp: () => {
+    onMouseDown() {
+      if (canvas.getClientRects()[0].height + 2 * 70 > window.innerHeight) {
+        barClass.add("drawInProgress");
+      }
+    },
+    onMouseUp() {
       if (!hasDoneFirstDraw) {
         hasDoneFirstDraw = true;
         download.classList.add("usable");
       }
-    }
+      barClass.remove("drawInProgress");
+    },
+
+    OrginalImage
   });
 
   // Sets draw color at load and when user clicks color input
@@ -90,7 +99,7 @@ function letUserDrawAndDownload(img) {
     }
   });
 
-  canvasMergerAndDonwloaderLink(byId("download"), {
+  makeDownloadLink(byId("download"), {
     OrginalImage,
     originalFileName,
     canvas

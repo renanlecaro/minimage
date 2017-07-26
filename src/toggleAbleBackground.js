@@ -4,8 +4,9 @@ export default function(background, { onChange }) {
     localStorage.setItem("background", currentMode);
     applyBackground();
   }
+  let switchCount = 0;
   function applyBackground() {
-    let options = ["#FFF", "#333"];
+    let options = ["#DDD", "#333"];
     let current = currentMode % options.length;
     background.style.backgroundColor = options[current];
     onChange(current);
@@ -14,7 +15,14 @@ export default function(background, { onChange }) {
     options.forEach((color, index) => bclass.remove("background_n_" + index));
     bclass.add("background_n_" + current);
     // https://www.youtube.com/watch?v=Pr8ETbGz35Q
-    console.log(current == 0 ? "jour !" : "nuit !");
+    if (switchCount < 8) {
+      console.log(current == 0 ? "jour !" : "nuit !");
+      switchCount++;
+    } else {
+      console.log(
+        "Monsieur Jacquouille, je vous en prie, à la longue, ça devient casse-pied !"
+      );
+    }
   }
   let currentMode = localStorage.getItem("background") || 0;
   applyBackground();

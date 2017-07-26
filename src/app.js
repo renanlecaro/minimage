@@ -14,7 +14,7 @@ import welcomeAnim from "./welcomeAnim.js";
 import { checkRunWithinWebview } from "./checkRunWithinWebview.js";
 const byId = document.getElementById.bind(document),
   DEFAULTSIZE = 20;
-
+checkRunWithinWebview();
 let originalFileName, OrginalImage;
 askForIMG({
   fileinput: byId("fileinput"),

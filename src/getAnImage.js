@@ -1,5 +1,9 @@
-import { startTask, endTask } from "./spinners.js";
-export default function({ onImageCreated, fileinput }) {
+export default function({
+  onImageCreated,
+  fileinput,
+  startTask = () => null,
+  endTask = () => null
+}) {
   // Callbacks onImageCreated with img tag and filename
   let originalFileName = "pasted-image";
   let askingForImage = true;
@@ -31,7 +35,7 @@ export default function({ onImageCreated, fileinput }) {
 
   // Setup of the welcome  UI
   function askForImage() {
-    fileinput.addEventListener("change", fileChanged);
+    fileinput && fileinput.addEventListener("change", fileChanged);
     function fileChanged(changeEvent) {
       fileinput.removeEventListener("change", fileChanged);
       originalFileName =

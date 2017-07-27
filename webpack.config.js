@@ -7,20 +7,31 @@ const extractLess = new ExtractTextPlugin({
 const webpack = require("webpack");
 const path = require("path");
 
-module.exports = {
-  entry: [
-    // "babel-polyfill",
-    // "./src/styles.less",
-    "./src/app.js"
-  ].concat(
+function makeEntry(srcArr) {
+  return srcArr.concat(
     process.NODE_ENV == "development"
       ? ["webpack-dev-server/client?http://localhost:8080"]
       : []
-  ),
+  );
+}
+
+module.exports = {
+  entry: {
+    bundle: makeEntry([
+      // "babel-polyfill",
+      // "./src/styles.less",
+      "./src/app.js"
+    ]),
+    webviewtests: makeEntry([
+      // "babel-polyfill",
+      // "./src/styles.less",
+      "./src/webviewtests.js"
+    ])
+  },
 
   output: {
     path: __dirname + "/dist",
-    filename: "bundle.js",
+    filename: "[name].js",
     publicPath: "/dist/"
   },
 

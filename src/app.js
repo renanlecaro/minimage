@@ -12,7 +12,9 @@ import { makeDownloadLink } from "./canvasMergerAndDonwloaderLink.js";
 import pencilSizeSlider from "./pencilSizeSlider.js";
 import welcomeAnim from "./welcomeAnim.js";
 import { checkRunWithinWebview } from "./checkRunWithinWebview.js";
+import { startTask, endTask } from "./spinners.js";
 const byId = document.getElementById.bind(document);
+
 checkRunWithinWebview();
 let originalFileName, OrginalImage;
 askForIMG({
@@ -20,7 +22,9 @@ askForIMG({
   onImageCreated: (img, filename) => {
     originalFileName = filename;
     letUserDrawAndDownload(img);
-  }
+  },
+  startTask,
+  endTask
 });
 
 let { stopAnim, bgColor } = welcomeAnim(byId("welcome"));

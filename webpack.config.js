@@ -81,7 +81,7 @@ module.exports = {
     overlay: true
   },
 
-  plugins: [extractLess].concat(
+  plugins: [extractLess, new OfflinePlugin()].concat(
     process.env.NODE_ENV == "production"
       ? [
           new webpack.optimize.UglifyJsPlugin({
@@ -94,8 +94,7 @@ module.exports = {
               screw_ie8: true
             },
             comments: false
-          }),
-          new OfflinePlugin()
+          })
         ]
       : []
   )

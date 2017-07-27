@@ -36,19 +36,23 @@ function letUserDrawAndDownload(img) {
   stopAnim();
   const canvas = byId("drawzone"),
     drawzoneWrapper = byId("drawzoneWrapper");
-  drawzoneWrapper.appendChild(img);
 
   // Switch to drawing mode
   byId("inputForAFile").style.display = "none";
   byId("drawAndDownload").style.display = "";
 
+  console.log(img.width, img.height);
+  debugger;
+  let maxRes = 3000; //Math.max(img.width, img.height);
   // Fits the canvas to screen
-  let maxRes = Math.max(window.innerHeight, window.innerWidth);
   let imgScale = Math.max(img.width / maxRes, img.height / maxRes, 1);
   img.width = canvas.width = img.width / imgScale;
   img.height = canvas.height = img.height / imgScale;
   drawzoneWrapper.style.maxWidth = img.width;
   drawzoneWrapper.style.maxHeight = img.height;
+
+  // Needs to happen AFTER size measurements
+  drawzoneWrapper.appendChild(img);
 
   let ctx = canvas.getContext("2d");
   let hasDoneFirstDraw = false;

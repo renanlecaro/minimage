@@ -6,14 +6,31 @@ export function makeDownloadLink(
   var downloadCounter = 0;
   link.addEventListener("click", downloadImage, false);
   function downloadImage(e) {
+    e.preventDefault();
     let filename = originalFileName + "-minimage-" + downloadCounter + ".png";
-    this.href = mergeCanvasAndImage(canvas, OrginalImage).toDataURL(
-      "image/png",
-      0.5
-    );
-    this.download = filename;
+    mergeCanvasAndImage(canvas, OrginalImage);
+    downloadCanvas(canvas, filename, link);
     downloadCounter++;
   }
+}
+
+function downloadCanvas(canvas, filename) {
+  canvas.toBlob(function(blob) {
+    if (window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveBlob(blob, filename);
+    } else {
+      let url = window.URL.createObjectURL(blob);
+      let link = document.createElement("a");
+      document.body.appendChild(link);
+      link.setAttribute("href", url);
+      link.setAttribute("download", filename);
+      link.click();
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+      }, 3000);
+    }
+  });
 }
 
 export function mergeCanvasAndImage(canvas, img) {

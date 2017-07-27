@@ -2,7 +2,7 @@ import welcomeAnim from "./welcomeAnim.js";
 
 const byId = document.getElementById.bind(document);
 
-welcomeAnim(byId("testCanvas"));
+welcomeAnim(byId("testCanvas"), { fitWindow: false });
 
 byId("testDL").addEventListener("click", function(ev) {
   ev.preventDefault();

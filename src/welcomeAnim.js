@@ -9,12 +9,16 @@ function randomColor(colorPool, exception = "") {
   return withoutEx[Math.floor(Math.random() * (withoutEx.length + 0.99))];
 }
 
-export default function(canvas) {
+export default function(canvas, { fitWindow }) {
   let ctx, w, h;
   let bgColor = randomColor(darkCoolColors);
   function reset() {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
+    if (fitWindow) {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    w = canvas.width;
+    h = canvas.height;
     ctx = canvas.getContext("2d");
     ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, w, h);

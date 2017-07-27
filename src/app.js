@@ -27,7 +27,7 @@ askForIMG({
   endTask
 });
 
-let { stopAnim, bgColor } = welcomeAnim(byId("welcome"));
+let { stopAnim, bgColor } = welcomeAnim(byId("welcome"), { fitWindow: true });
 byId("fileInputWrapper").style.color = bgColor;
 
 // Lets the user draw on the loaded image

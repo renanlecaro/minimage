@@ -1,4 +1,5 @@
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var OfflinePlugin = require("offline-plugin");
 
 const extractLess = new ExtractTextPlugin({
   filename: "[name].css",
@@ -93,7 +94,8 @@ module.exports = {
               screw_ie8: true
             },
             comments: false
-          })
+          }),
+          new OfflinePlugin()
         ]
       : []
   )

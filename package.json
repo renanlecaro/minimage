@@ -16,6 +16,7 @@
     "extract-text-webpack-plugin": "^3.0.0",
     "less": "^2.7.2",
     "less-loader": "^4.0.5",
+    "offline-plugin": "^4.8.3",
     "style-loader": "^0.18.2",
     "watch-less": "0.0.4",
     "webpack": "^3.3.0",

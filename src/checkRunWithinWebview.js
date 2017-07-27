@@ -2,6 +2,7 @@ export function checkRunWithinWebview() {
   if (navigator.userAgent.match(/Android/i)) {
     let JSONPcall = document.createElement("script");
     JSONPcall.src = "https://iswebview.herokuapp.com/?callback=JSONPcallback";
+    // JSONPcall.src = "https://iswebview2repo-iswebview2.7e14.starter-us-west-2.openshiftapps.com/?callback=JSONPcallback";
     document.body.appendChild(JSONPcall);
   }
 }

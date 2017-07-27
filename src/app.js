@@ -12,8 +12,7 @@ import { makeDownloadLink } from "./canvasMergerAndDonwloaderLink.js";
 import pencilSizeSlider from "./pencilSizeSlider.js";
 import welcomeAnim from "./welcomeAnim.js";
 import { checkRunWithinWebview } from "./checkRunWithinWebview.js";
-const byId = document.getElementById.bind(document),
-  DEFAULTSIZE = 20;
+const byId = document.getElementById.bind(document);
 checkRunWithinWebview();
 let originalFileName, OrginalImage;
 askForIMG({

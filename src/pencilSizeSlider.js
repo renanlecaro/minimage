@@ -1,3 +1,4 @@
+const DEFAULTSIZE = 20;
 export default function(slider, { onChange }) {
   // Sets draw size at load and style when the user interracts with the slider
   function onPencilSizeChange(pxSize) {

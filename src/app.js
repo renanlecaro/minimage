@@ -15,7 +15,8 @@ import { checkRunWithinWebview } from "./checkRunWithinWebview.js";
 import { startTask, endTask } from "./spinners.js";
 const byId = document.getElementById.bind(document);
 
-require("offline-plugin/runtime").install();
+import * as OfflinePluginRuntime from "offline-plugin/runtime";
+OfflinePluginRuntime.install();
 
 checkRunWithinWebview();
 let originalFileName, OrginalImage;

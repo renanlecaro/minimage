@@ -1,20 +1,21 @@
 export function makeDownloadLink(
   link,
-  { OrginalImage, canvas, originalFileName }
+  { OrginalImage, canvas, originalFileName, startTask, endTask }
 ) {
   // Download button
   var downloadCounter = 0;
   link.addEventListener("click", downloadImage, false);
   function downloadImage(e) {
+    startTask();
     e.preventDefault();
     let filename = originalFileName + "-minimage-" + downloadCounter + ".png";
     mergeCanvasAndImage(canvas, OrginalImage);
-    downloadCanvas(canvas, filename, link);
+    downloadCanvas(canvas, filename, endTask);
     downloadCounter++;
   }
 }
 
-function downloadCanvas(canvas, filename) {
+function downloadCanvas(canvas, filename, callback) {
   canvas.toBlob(function(blob) {
     if (window.navigator.msSaveOrOpenBlob) {
       window.navigator.msSaveBlob(blob, filename);
@@ -25,6 +26,7 @@ function downloadCanvas(canvas, filename) {
       link.setAttribute("href", url);
       link.setAttribute("download", filename);
       link.click();
+      setTimeout(callback);
       setTimeout(() => {
         window.URL.revokeObjectURL(url);
         document.body.removeChild(link);

@@ -42,7 +42,6 @@ function letUserDrawAndDownload(img) {
   byId("drawAndDownload").style.display = "";
 
   console.log(img.width, img.height);
-  debugger;
   let maxRes = 3000; //Math.max(img.width, img.height);
   // Fits the canvas to screen
   let imgScale = Math.max(img.width / maxRes, img.height / maxRes, 1);
@@ -110,6 +109,8 @@ function letUserDrawAndDownload(img) {
   makeDownloadLink(byId("download"), {
     OrginalImage,
     originalFileName,
-    canvas
+    canvas,
+    startTask,
+    endTask
   });
 }

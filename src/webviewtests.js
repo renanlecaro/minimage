@@ -1,20 +1,20 @@
-import askForIMG from "./getAnImage.js";
-
 import welcomeAnim from "./welcomeAnim.js";
-import { makeDownloadLink } from "./canvasMergerAndDonwloaderLink.js";
 
 const byId = document.getElementById.bind(document);
 
-askForIMG({
-  fileinput: byId("fileinput"),
-  onImageCreated: (img, filename) => {
-    document.body.appendChild(img);
-    makeDownloadLink(byId("testDL"), {
-      OrginalImage: img,
-      originalFileName: "youpi",
-      canvas: byId("testCanvas")
-    });
-    byId("testDL").innerHTML = "Download ready";
-  }
-});
 welcomeAnim(byId("testCanvas"));
+
+byId("testDL").addEventListener("click", function(ev) {
+  ev.preventDefault();
+
+  byId("testCanvas").toBlob(function(blob) {
+    if (window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveBlob(blob, filename);
+    } else {
+      var element = document.createElement("a");
+      element.setAttribute("href", window.URL.createObjectURL(blob));
+      element.setAttribute("download", "fileName.png");
+      element.click();
+    }
+  });
+});

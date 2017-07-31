@@ -1,8 +1,9 @@
-import { luminance } from "./colorToRGB.js";
 const coolColors = "#F44336,#E91E63,#9C27B0,#673AB7,#3F51B5,#2196F3,#03A9F4,#00BCD4,#009688,#4CAF50,#8BC34A,#CDDC39,#FFEB3B,#FFC107,#FF9800,#FF5722".split(
   ","
 );
-const darkCoolColors = coolColors.filter(c => luminance(c) < 150);
+
+//import { luminance } from "./colorToRGB.js";
+// const darkCoolColors = coolColors.filter(c => luminance(c) < 150);
 
 function randomColor(colorPool, exception = "") {
   let withoutEx = colorPool.filter(c => c != exception);
@@ -11,7 +12,7 @@ function randomColor(colorPool, exception = "") {
 
 export default function(canvas, { fitWindow }) {
   let ctx, w, h;
-  let bgColor = randomColor(darkCoolColors);
+  let bgColor = "#F44336"; //randomColor(darkCoolColors);
   function reset() {
     if (fitWindow) {
       canvas.width = window.innerWidth;

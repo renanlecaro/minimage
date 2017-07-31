@@ -129,8 +129,8 @@ canvas#drawzone {
 div#drawAndDownload {
   user-select: none;
   top: 0;
-  display: block;
   position: absolute;
+  display: block;
   bottom: 0;
   left: 0;
   right: 0;
@@ -172,19 +172,32 @@ div#drawAndDownload {
   }
 }
 
-#fileinput {
-  width: 100%;
-  opacity: 0;
-  cursor: pointer;
+label#fileInputWrapper {
+  transition: transform 0.2s;
+  &:active {
+    transform: scale(0.95);
+  }
+  #fileinput {
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
 }
 
-h1 {
-  font-weight: 100;
+h1.noscript {
+  display: flex;
+  background: orange;
+  color: white;
   text-align: center;
-  color: #007eab;
-  border: 2px dashed;
-  border-radius: 20px;
-  padding: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
 }
 
 ul.tip {

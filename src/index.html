@@ -1,10 +1,19 @@
 <html>
     <head>
-        <link rel="icon" href="./images/favicon48.png?cachebust=23843"/>
+        <link rel="icon" href="./images/favicon48.png?cachebust=18657"/>
         <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
         <title>Minimage : minimal image editor</title>
-        <meta name="description" content="Free web app to draw on your images. Works on mobile. No watermark."/>
+        <meta name="description" content="Open source web app to draw on your images. Works on mobile and offline. No watermark or ads."/>
         <link rel="manifest" href="./manifest.json">
+
+        <meta property="og:title" content="Minimage : minimal image editor">
+        <meta property="og:description" content="Draw on photos and screenshots without installing anything. Add the page to you android home screen and it will work offline too.">
+        <meta property="og:image" content="http://i.imgur.com/tge4zuS.png">
+        <meta property="og:url" content="https://minimage.tk">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="fb:app_id" content="summary_large_image">
+
+
         <meta name="theme-color" id="theme-color" content="#f44336" />
         <!-- Launch fullscreen when added to home screen -->
         <meta name="mobile-web-app-capable" content="yes">
@@ -20,13 +29,15 @@
             <div class="links">
               <a href="https://github.com/renanlecaro/minimage">Github</a>
               <a href="https://goo.gl/forms/gct3EtRegU1R2ayv2">Feedbacks</a>
+              <a href="https://www.facebook.com/minimage.tk">Facebook</a>
+
             </div>
           </div>
           <canvas id="welcome"></canvas>
         </div>
         <div id="drawAndDownload" style="display:none;">
             <div id="drawzoneWrapper">
-                <div id="background"></div>
+              <div id="background"></div>
               <canvas id="drawzone"></canvas>
             </div>
             <div id="topbar">

@@ -281,10 +281,10 @@ ul.tip {
     font-size: 80%;
     margin-left: 20px;
     position: relative;
-    left: 10000px;
+    opacity: 0.5;
     &.usable {
-      left: 0;
-      animation: bounceIn 0.8s;
+      opacity: 1;
+      animation: bounceIn 0.3s;
     }
     span.icon {
       padding: 0 5px;
@@ -302,13 +302,10 @@ ul.tip {
 }
 
 @keyframes bounceIn {
-  0%,
-  50% {
-    opacity: 0;
-    transform: scale(0.5);
+  0% {
     animation-timing-function: ease-in;
   }
-  80% {
+  50% {
     opacity: 1;
     transform: scale(1.2) translate(0, -5px);
     animation-timing-function: ease-out;

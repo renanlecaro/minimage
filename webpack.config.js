@@ -89,23 +89,24 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "src/index.html"
     }),
-    extractLess,
-    new OfflinePlugin()
-  ].concat(
-    process.env.NODE_ENV == "production"
-      ? [
-          new webpack.optimize.UglifyJsPlugin({
-            beautify: false,
-            mangle: {
-              screw_ie8: true,
-              keep_fnames: true
-            },
-            compress: {
-              screw_ie8: true
-            },
-            comments: false
-          })
-        ]
-      : []
-  )
+    extractLess
+  ]
+    .concat(
+      process.env.NODE_ENV == "production"
+        ? [
+            new webpack.optimize.UglifyJsPlugin({
+              beautify: false,
+              mangle: {
+                screw_ie8: true,
+                keep_fnames: true
+              },
+              compress: {
+                screw_ie8: true
+              },
+              comments: false
+            })
+          ]
+        : []
+    )
+    .concat([new OfflinePlugin()])
 };

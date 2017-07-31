@@ -6,7 +6,7 @@ const darkCoolColors = coolColors.filter(c => luminance(c) < 150);
 
 function randomColor(colorPool, exception = "") {
   let withoutEx = colorPool.filter(c => c != exception);
-  return withoutEx[Math.floor(Math.random() * (withoutEx.length + 0.99))];
+  return withoutEx[Math.floor(Math.random() * withoutEx.length)];
 }
 
 export default function(canvas, { fitWindow }) {

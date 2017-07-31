@@ -1,11 +1,11 @@
 <html>
     <head>
-        <link rel="icon" href="./images/favicon48.png?cachebust=8859"/>
+        <link rel="icon" href="./images/favicon48.png?cachebust=4466"/>
         <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
         <title>Minimage : minimal image editor</title>
         <meta name="description" content="Free web app to draw on your images. Works on mobile. No watermark."/>
         <link rel="manifest" href="./manifest.json">
-        
+
         <!-- Launch fullscreen when added to home screen -->
         <meta name="mobile-web-app-capable" content="yes">
     </head>
@@ -32,6 +32,7 @@
             <div id="topbar">
                 <button id="pensizePreview" >
                     <div id="pensizePreviewDot"></div>
+                    <div id="pensizePreviewBorder"></div>
                 </button>
                 <input type="range" id="pensize" min="2" max="60"/>
                 <a id="download" href="#">

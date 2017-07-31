@@ -6,11 +6,13 @@ export default function(
   { onColorChange, elementToContrastWith, canvasForCursor }
 ) {
   const pensizePreviewDot = pensizePreview.children[0];
+  const pensizePreviewBorder = pensizePreview.children[1];
 
   function refreshColorPreviewBorder() {
-    pensizePreviewDot.style.border =
-      "1px solid " +
-      borderColor(currentColor, elementToContrastWith.style.backgroundColor);
+    pensizePreviewBorder.style.background = borderColor(
+      currentColor,
+      elementToContrastWith.style.backgroundColor
+    );
   }
 
   let currentColor;
@@ -32,10 +34,15 @@ export default function(
     onColorChange(color);
   }
   let currentSize;
+  // Should be 10
+  const baseSize = pensizePreviewDot.getBoundingClientRect().width;
+
   function setColorDotSize(pxSize) {
     currentSize = pxSize;
     setCursor(canvasForCursor, currentSize, currentColor);
-    pensizePreviewDot.style.transform = "scale(" + pxSize / 10 + ")";
+    pensizePreviewDot.style.transform = "scale(" + pxSize / baseSize + ")";
+    pensizePreviewBorder.style.transform =
+      "scale(" + (pxSize / baseSize + 1 / baseSize) + ")";
   }
 
   setTimeout(() =>

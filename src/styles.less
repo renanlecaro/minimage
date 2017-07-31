@@ -200,7 +200,7 @@ ul.tip {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 40px;
+  height: 50px;
 
   padding: 10px;
   display: flex;
@@ -208,7 +208,7 @@ ul.tip {
   align-items: center;
   z-index: 3;
   overflow: hidden;
-  max-width: 340px;
+  max-width: 400px;
   margin: auto;
   border-radius: 5px;
   bottom: 10px;
@@ -221,10 +221,10 @@ ul.tip {
     transform: translate(0, 150px);
   }
   #pensizePreview {
-    width: 44px;
-    height: 44px;
+    width: 50px;
+    height: 50px;
     position: relative;
-    margin-right: 20px;
+    margin-right: 50px;
 
     background: transparent;
     border: none;
@@ -234,6 +234,9 @@ ul.tip {
       outline: none;
     }
     .bounceClick;
+    #pensizePreviewDot {
+      z-index: 2;
+    }
     &:hover {
       animation: squish 0.5s infinite;
 
@@ -241,10 +244,10 @@ ul.tip {
         animation: rainbow 1s infinite;
       }
     }
-    #pensizePreviewDot {
+    & > * {
       border-radius: 50%;
-      height: 10px;
-      width: 10px;
+      height: 50px;
+      width: 50px;
       position: absolute;
       top: 0;
       left: 0;
@@ -255,7 +258,7 @@ ul.tip {
         background: url(/images/eraser-color.svg);
         background-repeat: no-repeat;
         background-size: contain;
-        background-position-y: 2px;
+        background-position: center;
       }
     }
   }

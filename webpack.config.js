@@ -108,5 +108,9 @@ module.exports = {
           ]
         : []
     )
-    .concat([new OfflinePlugin()])
+    .concat([
+      new OfflinePlugin({
+        responseStrategy: "network-first"
+      })
+    ])
 };

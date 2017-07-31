@@ -1,12 +1,13 @@
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var OfflinePlugin = require("offline-plugin");
-
-const extractLess = new ExtractTextPlugin({
-  filename: "[name].css",
-  disable: process.env.NODE_ENV === "development"
-});
 const webpack = require("webpack");
 const path = require("path");
+var HtmlWebpackPlugin = require("html-webpack-plugin");
+
+const extractLess = new ExtractTextPlugin({
+  filename: "[name].[hash].css",
+  disable: process.env.NODE_ENV === "development"
+});
 
 function makeEntry(srcArr) {
   return srcArr.concat(
@@ -22,18 +23,14 @@ module.exports = {
       // "babel-polyfill",
       // "./src/styles.less",
       "./src/app.js"
-    ]),
-    webviewtests: makeEntry([
-      // "babel-polyfill",
-      // "./src/styles.less",
-      "./src/webviewtests.js"
     ])
   },
 
   output: {
-    path: __dirname + "/dist",
-    filename: "[name].js",
-    publicPath: "/dist/"
+    // Output files directly on root to be able to generate index.html
+    path: __dirname,
+    filename: "[name].[hash].js",
+    publicPath: "/"
   },
 
   devtool: "source-map",
@@ -73,6 +70,13 @@ module.exports = {
             presets: ["env"]
           }
         }
+      },
+
+      {
+        test: /\.html$/,
+        use: {
+          loader: "html-loader"
+        }
       }
     ]
   },
@@ -81,7 +85,13 @@ module.exports = {
     overlay: true
   },
 
-  plugins: [extractLess, new OfflinePlugin()].concat(
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "src/index.html"
+    }),
+    extractLess,
+    new OfflinePlugin()
+  ].concat(
     process.env.NODE_ENV == "production"
       ? [
           new webpack.optimize.UglifyJsPlugin({

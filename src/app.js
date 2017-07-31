@@ -45,7 +45,7 @@ function letUserDrawAndDownload(img) {
   byId("drawAndDownload").style.display = "";
 
   console.log(img.width, img.height);
-  let maxRes = 3000; //Math.max(img.width, img.height);
+  let maxRes = Math.max(window.innerWidth, window.innerHeight) * 2;
   // Fits the canvas to screen
   let imgScale = Math.max(img.width / maxRes, img.height / maxRes, 1);
   img.width = canvas.width = img.width / imgScale;

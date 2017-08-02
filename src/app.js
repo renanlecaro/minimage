@@ -14,6 +14,7 @@ import welcomeAnim from "./welcomeAnim.js";
 import { checkRunWithinWebview } from "./checkRunWithinWebview.js";
 import { startTask, endTask } from "./spinners.js";
 const byId = document.getElementById.bind(document);
+import { detectCtrlS } from "./detectCtrlS.js";
 
 import * as OfflinePluginRuntime from "offline-plugin/runtime";
 OfflinePluginRuntime.install();
@@ -62,14 +63,15 @@ function letUserDrawAndDownload(img) {
 
   let background = byId("background");
 
-  const { setColorDotSize, refreshColorPreviewBorder } = setupColorPicker(
-    byId("pensizePreview"),
-    {
-      canvasForCursor: canvas,
-      onColorChange: setColor,
-      elementToContrastWith: background
-    }
-  );
+  const {
+    setColorDotSize,
+    refreshColorPreviewBorder,
+    clearColorPicker
+  } = setupColorPicker(byId("pensizePreview"), {
+    canvasForCursor: canvas,
+    onColorChange: setColor,
+    elementToContrastWith: background
+  });
 
   let {
     drawWithColor,
@@ -77,7 +79,7 @@ function letUserDrawAndDownload(img) {
     setPencilSize
   } = setupEditableCanvas(canvas, {
     onMouseDown() {
-      if (canvas.getClientRects()[0].height + 2 * 70 > window.innerHeight) {
+      if (canvas.getClientRects()[0].height + 2 * 80 > window.innerHeight) {
         barClass.add("drawInProgress");
       }
     },
@@ -112,8 +114,16 @@ function letUserDrawAndDownload(img) {
   makeDownloadLink(byId("download"), {
     OrginalImage,
     originalFileName,
-    canvas,
-    startTask,
-    endTask
+    canvas
   });
+
+  detectCtrlS({
+    canvas,
+    OrginalImage,
+    originalFileName
+  });
+
+  function clear() {
+    clearColorPicker();
+  }
 }

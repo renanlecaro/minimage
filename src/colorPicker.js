@@ -1,6 +1,7 @@
 const DEFAULTCOLOR = "#2b76ce";
 import { luminance } from "./colorToRGB.js";
 import { paletteColors } from "./palette.js";
+import { createModal } from "./modal.js";
 export default function(
   pensizePreview,
   { onColorChange, elementToContrastWith, canvasForCursor }
@@ -16,10 +17,21 @@ export default function(
   }
 
   let currentColor;
-  pensizePreview.addEventListener("click", () =>
-    openColorPicker(currentColor, onColorPicked)
-  );
+  function openInitializedColorPicker() {
+    openColorPicker(currentColor, onColorPicked);
+  }
+  pensizePreview.addEventListener("click", openInitializedColorPicker);
+  let previousColor = localStorage.getItem("previousColor") || "eraser";
+
   function onColorPicked(color) {
+    console.log("onColorPicked", color);
+    if (currentColor && color !== currentColor) {
+      // For toggling between last two colors
+      previousColor = currentColor;
+    }
+
+    localStorage.setItem("previousColor", previousColor);
+
     currentColor = color;
     setCursor(canvasForCursor, currentSize, currentColor);
     if (color == "eraser") {
@@ -28,14 +40,21 @@ export default function(
     } else {
       pensizePreviewDot.classList.remove("eraser");
       pensizePreviewDot.style.background = color;
-      localStorage.setItem("color", color);
       refreshColorPreviewBorder();
     }
+    localStorage.setItem("color", color);
     onColorChange(color);
   }
   let currentSize;
   // Should be 10
   const baseSize = pensizePreviewDot.getBoundingClientRect().width;
+
+  window.addEventListener("keydown", ev => {
+    if (String.fromCharCode(ev.which).toLowerCase() === "x") {
+      console.log("x switching to " + previousColor);
+      onColorPicked(previousColor);
+    }
+  });
 
   function setColorDotSize(pxSize) {
     currentSize = pxSize;
@@ -50,6 +69,9 @@ export default function(
   );
 
   return {
+    clearColorPicker() {
+      pensizePreview.removeEventListener("click", openInitializedColorPicker);
+    },
     setColorDotSize,
     refreshColorPreviewBorder
   };
@@ -71,41 +93,34 @@ function textColor(background) {
 }
 
 function openColorPicker(currentColor, callback) {
-  let modal = document.createElement("div");
-  modal.classList.add("modal");
-  document.body.appendChild(modal);
-
-  function pickColor(color) {
-    closeModal();
-    callback(color);
-  }
-
-  paletteColors.forEach(color => {
-    let button = document.createElement("button");
-    button.classList.add("colorbutton");
-    if (color === currentColor) {
-      button.classList.add("active");
-      button.innerHTML = "Selected";
-      button.style.color = textColor(color);
+  createModal("color-modal", ({ modal, closeModal }) => {
+    function pickColor(color) {
+      closeModal();
+      callback(color);
     }
-    button.style.backgroundColor = color.toLowerCase();
-    button.addEventListener("click", () => pickColor(color));
-    modal.appendChild(button);
+
+    paletteColors.forEach(color => {
+      let button = document.createElement("button");
+      button.classList.add("colorbutton");
+      if (color === currentColor) {
+        button.classList.add("active");
+        button.innerHTML = "Selected";
+        button.style.color = textColor(color);
+      }
+      button.style.backgroundColor = color.toLowerCase();
+      button.addEventListener("click", () => pickColor(color));
+      modal.appendChild(button);
+    });
+
+    let eraser = document.createElement("button");
+    eraser.classList.add("eraser");
+    eraser.addEventListener("click", () => pickColor("eraser"));
+    eraser.innerHTML =
+      '<img src="/images/eraser-color.svg"/><span class="imagelabel">' +
+      ("eraser" === currentColor ? "Eraser selected" : "Eraser") +
+      "</span>";
+    modal.appendChild(eraser);
   });
-
-  let eraser = document.createElement("button");
-  eraser.classList.add("eraser");
-  eraser.addEventListener("click", () => pickColor("eraser"));
-  eraser.innerHTML =
-    '<img src="/images/eraser-color.svg"/><span class="imagelabel">' +
-    ("eraser" === currentColor ? "Eraser selected" : "Eraser") +
-    "</span>";
-  modal.appendChild(eraser);
-
-  function closeModal() {
-    modal.classList.add("closing");
-    setTimeout(() => document.body.removeChild(modal), 300);
-  }
 }
 
 function setCursor(node, size, color) {

@@ -318,7 +318,7 @@ body.background_n_1 {
     .button(#333, white);
   }
   #topbar {
-    background-color: rgba(51, 51, 51, 0.9);
+    background-color: rgba(51, 51, 51, 1);
   }
 }
 
@@ -330,7 +330,7 @@ body.background_n_0 {
     }
   }
   #topbar {
-    background-color: rgba(221, 221, 221, 0.9);
+    background-color: rgba(221, 221, 221, 1);
   }
 }
 
@@ -344,7 +344,9 @@ div#background {
   transition: background-color 0.2s;
 }
 .modal {
-  z-index: 4;
+  border-radius: 2px;
+  margin: auto;
+
   position: fixed;
   top: 0px;
   left: 0px;
@@ -354,49 +356,112 @@ div#background {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
-  button {
-    border: none;
-    flex-grow: 1;
-    width: 30%;
-    margin: 5px;
-    border-radius: 2px;
-    border: 1px solid rgba(255, 255, 255, 0);
-    .bounceClick;
-    // Avoids button with text taking more space
-    line-height: 0;
-    @media (min-width: 600) {
-      font-size: 140%;
-    }
-    &.active {
-      font-weight: bold;
-    }
-    &.colorbutton {
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.58);
-      &:hover {
-        animation: squish 0.3s;
+  &.color-modal {
+    max-width: 500px;
+    max-height: 500px;
+
+    button {
+      border: none;
+      flex-grow: 1;
+      width: 30%;
+      margin: 5px;
+      border-radius: 2px;
+      border: 1px solid rgba(255, 255, 255, 0);
+      .bounceClick;
+      // Avoids button with text taking more space
+      line-height: 0;
+      @media (min-width: 600) {
+        font-size: 140%;
+      }
+      &.active {
+        font-weight: bold;
+      }
+      &.colorbutton {
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.58);
+        &:hover {
+          animation: squish 0.3s;
+        }
+      }
+      &.eraser {
+        position: relative;
+        background: transparent;
+        img {
+          max-width: 100%;
+          max-height: 100%;
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          margin: auto;
+        }
+        &:hover img {
+          animation: eraseStuff 0.5s infinite;
+        }
+        span.imagelabel {
+          position: absolute;
+          left: 50%;
+          opacity: 0.8;
+          padding-left: 70px;
+        }
       }
     }
-    &.eraser {
-      position: relative;
-      background: transparent;
-      img {
-        max-width: 100%;
-        max-height: 100%;
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        margin: auto;
+  }
+  &.file-download {
+    overflow-y: scroll;
+    display: block;
+
+    max-width: 400px;
+    margin: auto;
+    a:hover,
+    button:hover {
+      animation: squish 0.3s;
+    }
+    & > * {
+      padding: 20px;
+      margin: 10px;
+      background: #eee;
+      display: block;
+      border-radius: 5px;
+      text-decoration: none;
+
+      &.facebookLink {
+        background: #3b5998;
+        color: white;
       }
-      &:hover img {
-        animation: eraseStuff 0.5s infinite;
+      &.githubLink {
+        color: white;
+        background: #24292e;
       }
-      span.imagelabel {
-        position: absolute;
-        left: 50%;
+      &#downloadIndicator {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+
+        div {
+          padding: 20px;
+        }
+
+        &.sucess {
+          background: #4caf50;
+          color: white;
+          flex-direction: column;
+          button {
+            padding: 20px;
+            margin: 10px;
+          }
+        }
+        &.failed {
+          background: #f44336;
+          color: white;
+        }
+      }
+      &.pcHint {
         opacity: 0.8;
-        padding-left: 70px;
+
+        @media (max-width: 900px) {
+          display: none;
+        }
       }
     }
   }
@@ -404,6 +469,19 @@ div#background {
   &.closing {
     pointer-events: none;
     animation: closeModal 0.3s ease-in;
+  }
+}
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: openBackdrop 0.2s;
+  &.closing {
+    pointer-events: none;
+    animation: closeBackdrop 0.3s;
   }
 }
 
@@ -454,5 +532,16 @@ div#background {
   }
   75% {
     background-color: #8bc34a;
+  }
+}
+
+@keyframes openBackdrop {
+  0% {
+    opacity: 0;
+  }
+}
+@keyframes closeBackdrop {
+  100% {
+    opacity: 0;
   }
 }

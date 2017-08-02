@@ -9,8 +9,8 @@ export default function(background, { onChange }) {
     let options = ["#DDD", "#333"];
     let current = currentMode % options.length;
     background.style.backgroundColor = options[current];
-    let meta = document.getElementById("theme-color");
-    meta && meta.setAttribute("content", "#fff");
+    // let meta = document.getElementById("theme-color");
+    // meta && meta.setAttribute("content", "#fff");
     onChange(current);
 
     let bclass = document.body.classList;

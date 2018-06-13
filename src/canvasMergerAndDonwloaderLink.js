@@ -1,14 +1,12 @@
-import { showDownloadOptions } from "./showDownloadOptions.js";
-
+ 
 export function makeDownloadLink(
   link,
   { OrginalImage, canvas, originalFileName }
 ) {
   // Download button
   function downloadImage(e) {
-    e.preventDefault();
-    let { failed, suceeded } = showDownloadOptions({});
-    triggerDownload(canvas, originalFileName, OrginalImage, failed, suceeded);
+    e.preventDefault(); 
+    triggerDownload(canvas, originalFileName, OrginalImage);
   }
   link.addEventListener("click", downloadImage);
 }

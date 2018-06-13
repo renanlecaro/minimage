@@ -33,7 +33,13 @@
     "type": "git",
     "url": "git+https://github.com/renanlecaro/minimage.git"
   },
-  "keywords": ["canvas", "image", "mobile", "responsive", "minimal"],
+  "keywords": [
+    "canvas",
+    "image",
+    "mobile",
+    "responsive",
+    "minimal"
+  ],
   "author": "Renan LE CARO",
   "license": "ISC",
   "bugs": {

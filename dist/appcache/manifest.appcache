@@ -1,0 +1,11 @@
+CACHE MANIFEST
+#ver:9/10/2018, 8:41:44 PM
+#plugin:4.8.3
+
+CACHE:
+./dist/bundle.f1584b69f9c93e44e8a8.js
+./dist/bundle.f1584b69f9c93e44e8a8.css
+./dist/../
+
+NETWORK:
+*

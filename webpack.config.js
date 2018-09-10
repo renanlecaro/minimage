@@ -19,18 +19,15 @@ function makeEntry(srcArr) {
 
 module.exports = {
   entry: {
-    bundle: makeEntry([
-      // "babel-polyfill",
-      // "./src/styles.less",
+    bundle: makeEntry([ 
       "./src/app.js"
     ])
   },
 
-  output: {
-    // Output files directly on root to be able to generate index.html
-    path: __dirname,
+  output: { 
+    path: path.resolve('./build'),
     filename: "[name].[hash].js",
-    publicPath: "/"
+    publicPath: './build/',
   },
 
   devtool: "source-map",

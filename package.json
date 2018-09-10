@@ -26,8 +26,7 @@
   },
   "scripts": {
     "start": "rm -rf dist && NODE_ENV=development  webpack-dev-server",
-    "build": "rm -rf build && webpack -p",
-    "publish": "./publish.sh"
+    "build": "rm -rf dist && webpack -p",
   },
   "repository": {
     "type": "git",

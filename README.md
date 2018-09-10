@@ -1,5 +1,5 @@
 # minimage
-Minimal html5 image editor : https://minimage.tk
+Minimal html5 image editor : https://renanlecaro.github.io/minimage/
 
 <img src="http://i.imgur.com/1G5qGOo.png">
 
@@ -9,7 +9,6 @@ I got tired of having no default app on my phone to draw on images. So I made a 
 Feel free to do PRs to make it work better on your setup. It would be nice to have it work offline (i tried but just managed to prevent refreshes)
 
 How to install
-
 - git pull
 - npm i
 
@@ -17,4 +16,7 @@ How to run locally (will transpile source to usable js and css)
 - npm start
 
 How to publish changes
-- npm run publish (it will ask for a commit message)
+- npm run build
+- git add . 
+- git commit
+- git push

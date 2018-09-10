@@ -1,8 +1,4 @@
-/*
 
-See the app in action here : https://minimage.tk
-
-*/
 import "./styles.less";
 import setupColorPicker from "./colorPicker.js";
 import askForIMG from "./getAnImage.js";
@@ -11,7 +7,6 @@ import setupEditableCanvas from "./editableCanvas.js";
 import { makeDownloadLink } from "./canvasMergerAndDonwloaderLink.js";
 import pencilSizeSlider from "./pencilSizeSlider.js";
 import welcomeAnim from "./welcomeAnim.js";
-import { checkRunWithinWebview } from "./checkRunWithinWebview.js";
 import { startTask, endTask } from "./spinners.js";
 const byId = document.getElementById.bind(document);
 import { detectCtrlS } from "./detectCtrlS.js";
@@ -19,7 +14,7 @@ import { detectCtrlS } from "./detectCtrlS.js";
 import * as OfflinePluginRuntime from "offline-plugin/runtime";
 OfflinePluginRuntime.install();
 
-checkRunWithinWebview();
+
 let originalFileName, OrginalImage;
 askForIMG({
   fileinput: byId("fileinput"),

@@ -25,9 +25,9 @@ module.exports = {
   },
 
   output: { 
-    path: path.resolve('./build'),
+    path: path.resolve('./dist'),
     filename: "[name].[hash].js",
-    publicPath: './build/',
+    publicPath: './dist/',
   },
 
   devtool: "source-map",

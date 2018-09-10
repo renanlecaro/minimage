@@ -116,7 +116,7 @@ function openColorPicker(currentColor, callback) {
     eraser.classList.add("eraser");
     eraser.addEventListener("click", () => pickColor("eraser"));
     eraser.innerHTML =
-      '<img src="/images/eraser-color.svg"/><span class="imagelabel">' +
+      '<img src="'+require('./eraser-color.svg')+'"/><span class="imagelabel">' +
       ("eraser" === currentColor ? "Eraser selected" : "Eraser") +
       "</span>";
     modal.appendChild(eraser);

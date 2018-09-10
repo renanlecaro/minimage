@@ -1,5 +1,5 @@
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var OfflinePlugin = require("offline-plugin");
+
 const webpack = require("webpack");
 const path = require("path");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -80,7 +80,8 @@ module.exports = {
         use: [
           {
             loader: 'file-loader',
-            options: {}
+            options: { 
+            }
           }
         ]
       }
@@ -115,9 +116,4 @@ module.exports = {
           ]
         : []
     )
-    .concat([
-      new OfflinePlugin({
-        responseStrategy: "network-first"
-      })
-    ])
 };

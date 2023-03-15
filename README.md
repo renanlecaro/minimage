@@ -1,5 +1,5 @@
 # minimage
-Minimal html5 image editor : https://renanlecaro.github.io/minimage/
+Minimal html5 image editor : https://minimage.lecaro.me/
 
 <img src="http://i.imgur.com/1G5qGOo.png">
 

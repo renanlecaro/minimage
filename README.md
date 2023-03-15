@@ -20,3 +20,5 @@ How to publish changes
 - git add . 
 - git commit
 - git push
+
+I'll try to automate the build at some point

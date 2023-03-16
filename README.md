@@ -15,6 +15,8 @@ How to install
 How to run locally (will transpile source to usable js and css)
 - npm start
 
+The app is hosted on CF pages, and a bit outdated (webpack 3). 
+
 How to publish changes
 - npm run build
 - git add . 
